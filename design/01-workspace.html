@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>工作台 — 英文转中文翻译工具</title>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #1E3A5F;
+  --primary-hover: #16304F;
+  --primary-light: #4A7AB5;
+  --primary-lighter: #D6E4F0;
+  --primary-ghost: rgba(30, 58, 95, 0.06);
+  --accent: #2ECC71;
+  --accent-hover: #27AE60;
+  --accent-light: #D5F5E3;
+  --accent-ghost: rgba(46, 204, 113, 0.08);
+  --warning: #F39C12;
+  --warning-light: #FEF3D5;
+  --warning-ghost: rgba(243, 156, 18, 0.08);
+  --error: #E74C3C;
+  --error-light: #FDEDEC;
+  --error-ghost: rgba(231, 76, 60, 0.08);
+  --info: #3498DB;
+  --info-light: #D6EAF8;
+  --bg-page: #F8F9FA;
+  --bg-card: #FFFFFF;
+  --bg-sidebar: #FFFFFF;
+  --bg-hover: rgba(30, 58, 95, 0.04);
+  --border: #E9ECEF;
+  --border-hover: #CED4DA;
+  --border-focus: var(--primary-light);
+  --text-primary: #2C3E50;
+  --text-secondary: #6C757D;
+  --text-tertiary: #ADB5BD;
+  --text-on-primary: #FFFFFF;
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.10);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.14);
+  --shadow-focus: 0 0 0 3px rgba(74, 122, 181, 0.25);
+  --radius-xs: 3px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-full: 9999px;
+  --ease-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+  --font-zh: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-en: "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "JetBrains Mono", "Consolas", monospace;
+  --font-display: "DM Sans", var(--font-zh);
+  --upload-bg: rgba(30, 58, 95, 0.02);
+  --upload-border: var(--border);
+  --upload-active-bg: rgba(74, 122, 181, 0.06);
+  --upload-active-border: var(--primary-light);
+  --sidebar-width: 220px;
+  --sidebar-collapsed: 64px;
+}
+
+[data-theme="dark"] {
+  --primary: #4A90D9;
+  --primary-hover: #5A9FE8;
+  --primary-light: #6BA3E0;
+  --primary-lighter: #1E3A5F;
+  --primary-ghost: rgba(74, 144, 217, 0.1);
+  --accent: #2ECC71;
+  --accent-hover: #3DDB80;
+  --accent-light: #1A3A2A;
+  --accent-ghost: rgba(46, 204, 113, 0.1);
+  --warning: #F5B731;
+  --warning-light: #3A3020;
+  --warning-ghost: rgba(245, 183, 49, 0.1);
+  --error: #FF6B6B;
+  --error-light: #3A2020;
+  --error-ghost: rgba(255, 107, 107, 0.1);
+  --info: #5DADE2;
+  --info-light: #1A2A3A;
+  --bg-page: #0F1117;
+  --bg-card: #16213E;
+  --bg-sidebar: #121929;
+  --bg-hover: rgba(74, 144, 217, 0.06);
+  --border: #2A2A4A;
+  --border-hover: #3A3A5A;
+  --border-focus: var(--primary);
+  --text-primary: #E8E8E8;
+  --text-secondary: #A0A0B0;
+  --text-tertiary: #6A6A7A;
+  --text-on-primary: #FFFFFF;
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.2);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.35);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.4);
+  --shadow-focus: 0 0 0 3px rgba(74, 144, 217, 0.3);
+  --upload-bg: rgba(74, 144, 217, 0.03);
+  --upload-border: var(--border);
+  --upload-active-bg: rgba(74, 144, 217, 0.08);
+  --upload-active-border: var(--primary);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--font-zh);
+  color: var(--text-primary);
+  background: var(--bg-page);
+  transition: background var(--duration-slow) var(--ease-out), color var(--duration-slow) var(--ease-out);
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ============ LAYOUT ============ */
+.app-layout {
+  display: flex;
+  height: 100vh;
+}
+
+/* ============ SIDEBAR ============ */
+.sidebar {
+  width: var(--sidebar-width);
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  transition: all var(--duration-normal) var(--ease-out);
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.sidebar-header {
+  padding: 20px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-logo {
+  width: 32px;
+  height: 32px;
+  background: var(--primary);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.sidebar-logo i { width: 18px; height: 18px; color: #fff; }
+
+.sidebar-brand {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.sidebar-brand-name {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sidebar-brand-ver {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 8px;
+  overflow-y: auto;
+}
+
+.sidebar-section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-tertiary);
+  padding: 12px 12px 6px;
+}
+.sidebar-section-label:first-child { padding-top: 0; }
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 450;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+  user-select: none;
+  position: relative;
+}
+.nav-item i { width: 18px; height: 18px; flex-shrink: 0; }
+.nav-item:hover { background: var(--bg-hover); color: var(--text-primary); }
+.nav-item.active {
+  background: var(--primary-ghost);
+  color: var(--primary);
+  font-weight: 500;
+}
+.nav-item.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  background: var(--primary);
+  border-radius: 0 2px 2px 0;
+}
+.nav-badge {
+  margin-left: auto;
+  padding: 1px 7px;
+  background: var(--error);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: var(--radius-full);
+  line-height: 16px;
+}
+
+.sidebar-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sidebar-avatar {
+  width: 32px;
+  height: 32px;
+  background: var(--primary-lighter);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.sidebar-user {
+  flex: 1;
+  min-width: 0;
+}
+.sidebar-user-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.sidebar-user-plan {
+  font-size: 11px;
+  color: var(--accent-hover);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.sidebar-user-plan i { width: 12px; height: 12px; }
+
+/* ============ MAIN CONTENT ============ */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* ============ TOP BAR ============ */
+.top-bar {
+  height: 56px;
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-card);
+  flex-shrink: 0;
+  transition: background var(--duration-slow) var(--ease-out);
+}
+
+.top-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.page-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-icon-sm {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all var(--duration-fast);
+}
+.btn-icon-sm:hover { background: var(--bg-hover); color: var(--text-primary); }
+.btn-icon-sm i { width: 18px; height: 18px; }
+
+.theme-toggle-sm {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: var(--bg-hover);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: all var(--duration-fast);
+}
+.theme-toggle-sm:hover { border-color: var(--border-hover); color: var(--text-primary); }
+.theme-toggle-sm i { width: 14px; height: 14px; }
+
+/* ============ SCROLLABLE CONTENT ============ */
+.content-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px;
+}
+
+/* ============ UPLOAD SECTION ============ */
+.upload-section {
+  margin-bottom: 28px;
+}
+
+.upload-zone {
+  border: 2px dashed var(--upload-border);
+  border-radius: var(--radius-xl);
+  padding: 52px 32px;
+  text-align: center;
+  background: var(--upload-bg);
+  transition: all var(--duration-normal) var(--ease-out);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.upload-zone::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 30%, rgba(74, 122, 181, 0.04) 0%, transparent 60%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--duration-normal);
+}
+
+.upload-zone:hover { border-color: var(--primary-light); background: var(--primary-ghost); }
+.upload-zone:hover::before { opacity: 1; }
+
+.upload-zone.drag-over {
+  border-color: var(--upload-active-border);
+  background: var(--upload-active-bg);
+  border-style: solid;
+  transform: scale(1.005);
+}
+.upload-zone.drag-over::before { opacity: 1; }
+
+.upload-zone.drag-over .upload-icon { transform: scale(1.1) translateY(-2px); color: var(--primary); }
+
+.upload-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 20px;
+  color: var(--text-tertiary);
+  transition: all var(--duration-normal) var(--ease-spring);
+}
+.upload-icon i { width: 56px; height: 56px; stroke-width: 1; }
+
+.upload-title {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.upload-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+.upload-formats {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.upload-format-tag {
+  padding: 3px 10px;
+  background: var(--bg-hover);
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+.upload-browse-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 20px;
+  background: var(--primary);
+  color: var(--text-on-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font-zh);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+.upload-browse-btn:hover { background: var(--primary-hover); }
+.upload-browse-btn i { width: 16px; height: 16px; }
+
+/* ============ FILE LIST (after drag) ============ */
+.file-list-section {
+  margin-bottom: 28px;
+  display: none;
+}
+.file-list-section.visible { display: block; animation: slideUp 0.3s var(--ease-out); }
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.file-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.file-list-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.file-count {
+  padding: 1px 8px;
+  background: var(--primary-ghost);
+  color: var(--primary);
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.file-list-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 16px;
+  height: 34px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  font-family: var(--font-zh);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+  white-space: nowrap;
+}
+.btn i { width: 16px; height: 16px; flex-shrink: 0; }
+.btn-primary { background: var(--primary); color: var(--text-on-primary); border-color: var(--primary); }
+.btn-primary:hover { background: var(--primary-hover); }
+.btn-secondary { background: transparent; color: var(--primary); border-color: var(--border); }
+.btn-secondary:hover { background: var(--primary-ghost); border-color: var(--primary-light); }
+.btn-danger-text { background: transparent; color: var(--error); border: none; padding: 0 8px; height: auto; font-size: 12px; }
+.btn-danger-text:hover { text-decoration: underline; }
+
+.file-list-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  transition: all var(--duration-fast) var(--ease-out);
+  animation: fileSlideIn 0.3s var(--ease-out) backwards;
+}
+.file-item:nth-child(1) { animation-delay: 0ms; }
+.file-item:nth-child(2) { animation-delay: 50ms; }
+.file-item:nth-child(3) { animation-delay: 100ms; }
+
+@keyframes fileSlideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.file-item:hover { border-color: var(--border-hover); }
+
+.file-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.file-icon i { width: 20px; height: 20px; }
+.file-icon-pdf { background: var(--error-ghost); color: var(--error); }
+.file-icon-docx { background: var(--primary-ghost); color: var(--primary); }
+
+.file-info { flex: 1; min-width: 0; }
+.file-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.file-meta {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+}
+.file-meta span.dot { color: var(--border); }
+
+.file-delete {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--text-tertiary);
+  border-radius: var(--radius-sm);
+  transition: all var(--duration-fast);
+}
+.file-delete:hover { color: var(--error); background: var(--error-ghost); }
+.file-delete i { width: 16px; height: 16px; }
+
+/* ============ TRANSLATION PROGRESS ============ */
+.progress-section {
+  margin-bottom: 28px;
+  display: none;
+}
+.progress-section.visible { display: block; animation: slideUp 0.3s var(--ease-out); }
+
+.progress-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  border-left: 3px solid var(--primary);
+}
+
+.progress-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.progress-card-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.progress-card-title .stage-badge {
+  padding: 2px 10px;
+  background: var(--warning-light);
+  color: var(--warning);
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.progress-card-title .stage-badge i { width: 12px; height: 12px; }
+
+.progress-pct {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.progress-bar-wrap {
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+  border-radius: 4px;
+  transition: width 0.6s var(--ease-out);
+  position: relative;
+}
+
+.progress-bar-fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.25) 50%, transparent 100%);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.progress-details {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.progress-eta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.progress-eta i { width: 14px; height: 14px; }
+
+.progress-stages {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.progress-stage {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  background: var(--bg-hover);
+}
+.progress-stage i { width: 12px; height: 12px; }
+.progress-stage.done { color: var(--accent); background: var(--accent-ghost); }
+.progress-stage.active { color: var(--primary); background: var(--primary-ghost); font-weight: 600; }
+.progress-stage-divider { width: 20px; height: 1px; background: var(--border); }
+
+.progress-cancel {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-zh);
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--duration-fast);
+}
+.progress-cancel:hover { border-color: var(--error); color: var(--error); background: var(--error-ghost); }
+
+/* ============ QUICK ACTIONS ============ */
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.quick-action-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-out);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.quick-action-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+.quick-action-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.quick-action-icon i { width: 20px; height: 20px; }
+.quick-action-icon-single { background: var(--primary-ghost); color: var(--primary); }
+.quick-action-icon-batch { background: var(--accent-ghost); color: var(--accent); }
+.quick-action-icon-settings { background: var(--warning-ghost); color: var(--warning); }
+
+.quick-action-text h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+.quick-action-text p {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+/* ============ RECENT RECORDS ============ */
+.recent-section {
+  margin-bottom: 28px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.section-title-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.section-link {
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: color var(--duration-fast);
+  background: none;
+  border: none;
+  font-family: var(--font-zh);
+}
+.section-link:hover { color: var(--primary); }
+.section-link i { width: 14px; height: 14px; }
+
+.recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.recent-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+.recent-item:hover { border-color: var(--border-hover); box-shadow: var(--shadow-xs); }
+
+.recent-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.recent-icon i { width: 20px; height: 20px; }
+.recent-icon-pdf { background: var(--error-ghost); color: var(--error); }
+.recent-icon-docx { background: var(--primary-ghost); color: var(--primary); }
+.recent-icon-done { background: var(--accent-ghost); color: var(--accent); }
+
+.recent-info { flex: 1; min-width: 0; }
+.recent-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.recent-meta {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 3px;
+}
+
+.recent-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+}
+.badge-success { background: var(--accent-light); color: var(--accent-hover); }
+.badge-warning { background: var(--warning-light); color: var(--warning); }
+.badge-error { background: var(--error-light); color: var(--error); }
+.badge-dot::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+.recent-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.recent-action-btn {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-tertiary);
+  transition: all var(--duration-fast);
+}
+.recent-action-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+.recent-action-btn i { width: 16px; height: 16px; }
+
+/* ============ EMPTY STATE ============ */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-tertiary);
+}
+.empty-state i { width: 48px; height: 48px; margin-bottom: 12px; opacity: 0.4; }
+.empty-state p { font-size: 13px; }
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 900px) {
+  .sidebar { width: var(--sidebar-collapsed); }
+  .sidebar-brand, .sidebar-section-label, .nav-item span,
+  .nav-badge, .sidebar-user, .sidebar-brand-ver { display: none; }
+  .nav-item { justify-content: center; padding: 10px; }
+  .sidebar-header { justify-content: center; padding: 16px; }
+  .sidebar-footer { justify-content: center; }
+  .quick-actions { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="app-layout">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo"><i data-lucide="languages"></i></div>
+      <div class="sidebar-brand">
+        <span class="sidebar-brand-name">英译中翻译工具</span>
+        <span class="sidebar-brand-ver">v1.0.0</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">主要功能</div>
+      <div class="nav-item active">
+        <i data-lucide="layout-dashboard"></i>
+        <span>工作台</span>
+      </div>
+      <div class="nav-item">
+        <i data-lucide="history"></i>
+        <span>翻译记录</span>
+        <span class="nav-badge">12</span>
+      </div>
+      <div class="nav-item">
+        <i data-lucide="book-open"></i>
+        <span>术语表</span>
+      </div>
+      <div class="nav-item">
+        <i data-lucide="file-stack"></i>
+        <span>批量翻译</span>
+      </div>
+
+      <div class="sidebar-section-label">系统</div>
+      <div class="nav-item">
+        <i data-lucide="settings"></i>
+        <span>翻译设置</span>
+      </div>
+      <div class="nav-item">
+        <i data-lucide="user-circle"></i>
+        <span>账户信息</span>
+      </div>
+      <div class="nav-item">
+        <i data-lucide="life-buoy"></i>
+        <span>帮助与反馈</span>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-avatar">Li</div>
+      <div class="sidebar-user">
+        <div class="sidebar-user-name">Li Wei</div>
+        <div class="sidebar-user-plan"><i data-lucide="crown"></i> 专业版</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main-content">
+
+    <!-- Top Bar -->
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <h1 class="page-title">工作台</h1>
+      </div>
+      <div class="top-bar-right">
+        <button class="theme-toggle-sm" onclick="toggleTheme()">
+          <i data-lucide="moon"></i>
+          <span>暗色</span>
+        </button>
+        <button class="btn-icon-sm"><i data-lucide="bell"></i></button>
+        <button class="btn-icon-sm"><i data-lucide="help-circle"></i></button>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="content-area">
+
+      <!-- Upload Zone -->
+      <section class="upload-section">
+        <div class="upload-zone" id="uploadZone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+          <div class="upload-icon"><i data-lucide="cloud-upload"></i></div>
+          <div class="upload-title">拖拽文件到此处开始翻译</div>
+          <div class="upload-desc">支持 PDF、Word 文档，可同时上传多个文件</div>
+          <div class="upload-formats">
+            <span class="upload-format-tag">.PDF</span>
+            <span class="upload-format-tag">.DOCX</span>
+            <span class="upload-format-tag">.DOC</span>
+          </div>
+          <button class="upload-browse-btn" onclick="document.getElementById('fileInput').click()">
+            <i data-lucide="folder-open"></i> 浏览文件
+          </button>
+          <input type="file" id="fileInput" multiple accept=".pdf,.docx,.doc" style="display:none" onchange="handleFileSelect(event)">
+        </div>
+      </section>
+
+      <!-- File List (shown after files added) -->
+      <section class="file-list-section" id="fileListSection">
+        <div class="file-list-header">
+          <div class="file-list-title">
+            已选择文件 <span class="file-count" id="fileCount">0</span>
+          </div>
+          <div class="file-list-actions">
+            <button class="btn btn-secondary" onclick="clearFiles()"><i data-lucide="x"></i> 清空</button>
+            <button class="btn btn-primary" onclick="startTranslation()"><i data-lucide="play"></i> 开始翻译</button>
+          </div>
+        </div>
+        <div class="file-list-items" id="fileListItems"></div>
+      </section>
+
+      <!-- Translation Progress -->
+      <section class="progress-section" id="progressSection">
+        <div class="progress-card">
+          <div class="progress-card-header">
+            <div class="progress-card-title">
+              <span>正在翻译</span>
+              <span class="stage-badge" id="stageBadge"><i data-lucide="loader"></i> <span id="stageText">翻译中</span></span>
+            </div>
+            <span class="progress-pct" id="progressPct">0%</span>
+          </div>
+          <div class="progress-stages">
+            <span class="progress-stage done" id="stage-parse"><i data-lucide="check"></i> 解析</span>
+            <span class="progress-stage-divider"></span>
+            <span class="progress-stage active" id="stage-translate"><i data-lucide="loader"></i> 翻译</span>
+            <span class="progress-stage-divider"></span>
+            <span class="progress-stage" id="stage-rebuild"><i data-lucide="circle"></i> 排版</span>
+            <span class="progress-stage-divider"></span>
+            <span class="progress-stage" id="stage-done"><i data-lucide="circle"></i> 完成</span>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" id="progressFill" style="width: 0%"></div>
+          </div>
+          <div class="progress-details">
+            <span id="progressDetail">正在翻译第 1/24 段...</span>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span class="progress-eta" id="progressEta"><i data-lucide="clock"></i> 预估剩余 3 分钟</span>
+              <button class="progress-cancel" onclick="cancelTranslation()"><i data-lucide="x"></i> 取消</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quick Actions -->
+      <section class="quick-actions">
+        <div class="quick-action-card" onclick="document.getElementById('fileInput').click()">
+          <div class="quick-action-icon quick-action-icon-single"><i data-lucide="file-text"></i></div>
+          <div class="quick-action-text">
+            <h3>单文件翻译</h3>
+            <p>翻译单个文档</p>
+          </div>
+        </div>
+        <div class="quick-action-card">
+          <div class="quick-action-icon quick-action-icon-batch"><i data-lucide="files"></i></div>
+          <div class="quick-action-text">
+            <h3>批量翻译</h3>
+            <p>同时翻译多个文件</p>
+          </div>
+        </div>
+        <div class="quick-action-card">
+          <div class="quick-action-icon quick-action-icon-settings"><i data-lucide="sliders-horizontal"></i></div>
+          <div class="quick-action-text">
+            <h3>翻译设置</h3>
+            <p>风格、术语表、输出</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recent Records -->
+      <section class="recent-section">
+        <div class="section-header">
+          <span class="section-title-text">最近翻译</span>
+          <button class="section-link">查看全部 <i data-lucide="chevron-right"></i></button>
+        </div>
+        <div class="recent-list">
+          <div class="recent-item">
+            <div class="recent-icon recent-icon-done"><i data-lucide="file-check"></i></div>
+            <div class="recent-info">
+              <div class="recent-name">Annual_Report_2024.pdf</div>
+              <div class="recent-meta">
+                <span>50 页</span>
+                <span>2.4 MB</span>
+                <span>3 分钟前</span>
+              </div>
+            </div>
+            <div class="recent-status">
+              <span class="badge badge-success badge-dot">已完成</span>
+            </div>
+            <div class="recent-actions">
+              <button class="recent-action-btn" title="预览"><i data-lucide="eye"></i></button>
+              <button class="recent-action-btn" title="导出"><i data-lucide="download"></i></button>
+            </div>
+          </div>
+
+          <div class="recent-item">
+            <div class="recent-icon recent-icon-done"><i data-lucide="file-check"></i></div>
+            <div class="recent-info">
+              <div class="recent-name">Research_Paper_Neural_Networks.docx</div>
+              <div class="recent-meta">
+                <span>18 页</span>
+                <span>856 KB</span>
+                <span>1 小时前</span>
+              </div>
+            </div>
+            <div class="recent-status">
+              <span class="badge badge-success badge-dot">已完成</span>
+            </div>
+            <div class="recent-actions">
+              <button class="recent-action-btn" title="预览"><i data-lucide="eye"></i></button>
+              <button class="recent-action-btn" title="导出"><i data-lucide="download"></i></button>
+            </div>
+          </div>
+
+          <div class="recent-item">
+            <div class="recent-icon recent-icon-pdf"><i data-lucide="file-text"></i></div>
+            <div class="recent-info">
+              <div class="recent-name">PI_No.GAC2026050701_GAMAK_Leo Miranda.pdf</div>
+              <div class="recent-meta">
+                <span>2 页</span>
+                <span>66 KB</span>
+                <span>昨天</span>
+              </div>
+            </div>
+            <div class="recent-status">
+              <span class="badge badge-warning badge-dot">翻译中</span>
+            </div>
+            <div class="recent-actions">
+              <button class="recent-action-btn" title="查看进度"><i data-lucide="loader"></i></button>
+            </div>
+          </div>
+
+          <div class="recent-item">
+            <div class="recent-icon recent-icon-docx"><i data-lucide="file-text"></i></div>
+            <div class="recent-info">
+              <div class="recent-name">Meeting_Notes_Q4_Strategy.docx</div>
+              <div class="recent-meta">
+                <span>8 页</span>
+                <span>234 KB</span>
+                <span>2 天前</span>
+              </div>
+            </div>
+            <div class="recent-status">
+              <span class="badge badge-error badge-dot">失败</span>
+            </div>
+            <div class="recent-actions">
+              <button class="recent-action-btn" title="重试"><i data-lucide="refresh-cw"></i></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<script>
+// ============ Theme ============
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  const btn = document.querySelector('.theme-toggle-sm');
+  btn.querySelector('span').textContent = isDark ? '暗色' : '亮色';
+  btn.querySelector('i').setAttribute('data-lucide', isDark ? 'moon' : 'sun');
+  lucide.createIcons();
+}
+
+// ============ Upload Zone ============
+function handleDragOver(e) {
+  e.preventDefault();
+  document.getElementById('uploadZone').classList.add('drag-over');
+}
+function handleDragLeave(e) {
+  document.getElementById('uploadZone').classList.remove('drag-over');
+}
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('uploadZone').classList.remove('drag-over');
+  const files = Array.from(e.dataTransfer.files);
+  addFiles(files);
+}
+function handleFileSelect(e) {
+  const files = Array.from(e.target.files);
+  addFiles(files);
+}
+
+// ============ File Management ============
+let uploadedFiles = [];
+
+function addFiles(files) {
+  files.forEach(f => {
+    if (!uploadedFiles.find(uf => uf.name === f.name)) {
+      uploadedFiles.push(f);
+    }
+  });
+  renderFileList();
+}
+
+function clearFiles() {
+  uploadedFiles = [];
+  renderFileList();
+}
+
+function removeFile(idx) {
+  uploadedFiles.splice(idx, 1);
+  renderFileList();
+}
+
+function renderFileList() {
+  const section = document.getElementById('fileListSection');
+  const items = document.getElementById('fileListItems');
+  const count = document.getElementById('fileCount');
+
+  if (uploadedFiles.length === 0) {
+    section.classList.remove('visible');
+    return;
+  }
+
+  section.classList.add('visible');
+  count.textContent = uploadedFiles.length;
+
+  items.innerHTML = uploadedFiles.map((f, i) => {
+    const ext = f.name.split('.').pop().toLowerCase();
+    const isPdf = ext === 'pdf';
+    const size = f.size ? (f.size / 1024 / 1024).toFixed(1) + ' MB' : '未知';
+    return `
+      <div class="file-item">
+        <div class="file-icon ${isPdf ? 'file-icon-pdf' : 'file-icon-docx'}">
+          <i data-lucide="${isPdf ? 'file-text' : 'file-text'}"></i>
+        </div>
+        <div class="file-info">
+          <div class="file-name">${f.name}</div>
+          <div class="file-meta">
+            <span>${size}</span>
+            <span class="dot">&middot;</span>
+            <span>.${ext.toUpperCase()}</span>
+          </div>
+        </div>
+        <button class="file-delete" onclick="removeFile(${i})"><i data-lucide="x"></i></button>
+      </div>
+    `;
+  }).join('');
+
+  lucide.createIcons();
+}
+
+// ============ Translation Progress Simulation ============
+let translationInterval = null;
+
+function startTranslation() {
+  if (uploadedFiles.length === 0) return;
+
+  document.getElementById('progressSection').classList.add('visible');
+  document.getElementById('fileListSection').classList.remove('visible');
+
+  let progress = 0;
+  const stages = [
+    { id: 'stage-parse', text: '解析中', pct: [0, 20] },
+    { id: 'stage-translate', text: '翻译中', pct: [20, 80] },
+    { id: 'stage-rebuild', text: '排版重建中', pct: [80, 95] },
+    { id: 'stage-done', text: '完成', pct: [95, 100] }
+  ];
+  let currentStage = 0;
+
+  translationInterval = setInterval(() => {
+    progress += Math.random() * 3 + 0.5;
+    if (progress > 100) progress = 100;
+
+    // Update stage
+    if (progress >= 20 && currentStage < 1) { currentStage = 1; updateStages(1); }
+    if (progress >= 80 && currentStage < 2) { currentStage = 2; updateStages(2); }
+    if (progress >= 95 && currentStage < 3) { currentStage = 3; updateStages(3); }
+
+    document.getElementById('progressFill').style.width = progress + '%';
+    document.getElementById('progressPct').textContent = Math.round(progress) + '%';
+
+    if (currentStage === 1) {
+      const seg = Math.floor(progress / 4);
+      document.getElementById('progressDetail').textContent = `正在翻译第 ${seg}/24 段...`;
+      const eta = Math.max(0, Math.round((100 - progress) / 3));
+      document.getElementById('progressEta').innerHTML = `<i data-lucide="clock"></i> 预估剩余 ${eta} 秒`;
+      lucide.createIcons();
+    }
+
+    if (progress >= 100) {
+      clearInterval(translationInterval);
+      document.getElementById('progressDetail').textContent = '翻译完成！';
+      document.getElementById('progressEta').innerHTML = `<i data-lucide="check-circle"></i> 已完成`;
+      document.getElementById('stageBadge').innerHTML = `<i data-lucide="check-circle"></i> 完成`;
+      document.getElementById('stageBadge').style.background = 'var(--accent-ghost)';
+      document.getElementById('stageBadge').style.color = 'var(--accent)';
+      document.getElementById('progressFill').style.background = 'var(--accent)';
+      lucide.createIcons();
+    }
+  }, 300);
+}
+
+function updateStages(idx) {
+  const stageIds = ['stage-parse', 'stage-translate', 'stage-rebuild', 'stage-done'];
+  const stageTexts = ['解析中', '翻译中', '排版重建中', '完成'];
+  stageIds.forEach((id, i) => {
+    const el = document.getElementById(id);
+    el.classList.remove('done', 'active');
+    if (i < idx) { el.classList.add('done'); el.querySelector('i').setAttribute('data-lucide', 'check'); }
+    else if (i === idx) { el.classList.add('active'); el.querySelector('i').setAttribute('data-lucide', 'loader'); }
+    else { el.querySelector('i').setAttribute('data-lucide', 'circle'); }
+  });
+  document.getElementById('stageText').textContent = stageTexts[idx];
+  lucide.createIcons();
+}
+
+function cancelTranslation() {
+  if (translationInterval) clearInterval(translationInterval);
+  document.getElementById('progressSection').classList.remove('visible');
+  document.getElementById('fileListSection').classList.add('visible');
+  // Reset stages
+  ['stage-parse','stage-translate','stage-rebuild','stage-done'].forEach(id => {
+    const el = document.getElementById(id);
+    el.classList.remove('done', 'active');
+    el.querySelector('i').setAttribute('data-lucide', id === 'stage-parse' ? 'loader' : 'circle');
+  });
+  document.getElementById('stageText').textContent = '解析中';
+  document.getElementById('progressFill').style.width = '0%';
+  document.getElementById('progressPct').textContent = '0%';
+  document.getElementById('stageBadge').innerHTML = `<i data-lucide="loader"></i> <span id="stageText">解析中</span>`;
+  document.getElementById('stageBadge').style.background = '';
+  document.getElementById('stageBadge').style.color = '';
+  document.getElementById('progressFill').style.background = '';
+  lucide.createIcons();
+}
+
+// ============ Init ============
+lucide.createIcons();
+</script>
+
+</body>
+</html>

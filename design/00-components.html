@@ -1,0 +1,2362 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>英文转中文翻译工具 — UI 组件库</title>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   CSS CUSTOM PROPERTIES — LIGHT THEME
+   ============================================ */
+:root {
+  /* Primary palette */
+  --primary: #1E3A5F;
+  --primary-hover: #16304F;
+  --primary-light: #4A7AB5;
+  --primary-lighter: #D6E4F0;
+  --primary-ghost: rgba(30, 58, 95, 0.06);
+
+  /* Accent */
+  --accent: #2ECC71;
+  --accent-hover: #27AE60;
+  --accent-light: #D5F5E3;
+  --accent-ghost: rgba(46, 204, 113, 0.08);
+
+  /* Semantic */
+  --warning: #F39C12;
+  --warning-hover: #E08E0B;
+  --warning-light: #FEF3D5;
+  --warning-ghost: rgba(243, 156, 18, 0.08);
+
+  --error: #E74C3C;
+  --error-hover: #C0392B;
+  --error-light: #FDEDEC;
+  --error-ghost: rgba(231, 76, 60, 0.08);
+
+  --info: #3498DB;
+  --info-light: #D6EAF8;
+  --info-ghost: rgba(52, 152, 219, 0.08);
+
+  /* Surfaces */
+  --bg-page: #F8F9FA;
+  --bg-card: #FFFFFF;
+  --bg-elevated: #FFFFFF;
+  --bg-input: #FFFFFF;
+  --bg-hover: rgba(30, 58, 95, 0.04);
+  --bg-active: rgba(30, 58, 95, 0.08);
+  --bg-sidebar: #FFFFFF;
+
+  /* Borders */
+  --border: #E9ECEF;
+  --border-hover: #CED4DA;
+  --border-focus: var(--primary-light);
+  --border-error: var(--error);
+
+  /* Text */
+  --text-primary: #2C3E50;
+  --text-secondary: #6C757D;
+  --text-tertiary: #ADB5BD;
+  --text-on-primary: #FFFFFF;
+  --text-on-accent: #FFFFFF;
+  --text-link: var(--primary-light);
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.10);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.14);
+  --shadow-xl: 0 16px 48px rgba(0,0,0,0.18);
+  --shadow-focus: 0 0 0 3px rgba(74, 122, 181, 0.25);
+  --shadow-focus-error: 0 0 0 3px rgba(231, 76, 60, 0.2);
+
+  /* Radius */
+  --radius-xs: 3px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --ease-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+
+  /* Typography */
+  --font-zh: "Noto Sans SC", "Source Han Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-en: "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+  --font-display: "DM Sans", var(--font-zh);
+
+  /* Upload zone */
+  --upload-bg: rgba(30, 58, 95, 0.02);
+  --upload-border: var(--border);
+  --upload-active-bg: rgba(74, 122, 181, 0.06);
+  --upload-active-border: var(--primary-light);
+}
+
+/* ============================================
+   DARK THEME
+   ============================================ */
+[data-theme="dark"] {
+  --primary: #4A90D9;
+  --primary-hover: #5A9FE8;
+  --primary-light: #6BA3E0;
+  --primary-lighter: #1E3A5F;
+  --primary-ghost: rgba(74, 144, 217, 0.1);
+
+  --accent: #2ECC71;
+  --accent-hover: #3DDB80;
+  --accent-light: #1A3A2A;
+  --accent-ghost: rgba(46, 204, 113, 0.1);
+
+  --warning: #F5B731;
+  --warning-hover: #F7C455;
+  --warning-light: #3A3020;
+  --warning-ghost: rgba(245, 183, 49, 0.1);
+
+  --error: #FF6B6B;
+  --error-hover: #FF8585;
+  --error-light: #3A2020;
+  --error-ghost: rgba(255, 107, 107, 0.1);
+
+  --info: #5DADE2;
+  --info-light: #1A2A3A;
+  --info-ghost: rgba(93, 173, 226, 0.1);
+
+  --bg-page: #0F1117;
+  --bg-card: #16213E;
+  --bg-elevated: #1A2744;
+  --bg-input: #1A2744;
+  --bg-hover: rgba(74, 144, 217, 0.06);
+  --bg-active: rgba(74, 144, 217, 0.12);
+  --bg-sidebar: #121929;
+
+  --border: #2A2A4A;
+  --border-hover: #3A3A5A;
+  --border-focus: var(--primary);
+  --border-error: var(--error);
+
+  --text-primary: #E8E8E8;
+  --text-secondary: #A0A0B0;
+  --text-tertiary: #6A6A7A;
+  --text-on-primary: #FFFFFF;
+  --text-on-accent: #FFFFFF;
+  --text-link: var(--primary-light);
+
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.2);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.35);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.4);
+  --shadow-xl: 0 16px 48px rgba(0,0,0,0.5);
+  --shadow-focus: 0 0 0 3px rgba(74, 144, 217, 0.3);
+  --shadow-focus-error: 0 0 0 3px rgba(255, 107, 107, 0.25);
+
+  --upload-bg: rgba(74, 144, 217, 0.03);
+  --upload-border: var(--border);
+  --upload-active-bg: rgba(74, 144, 217, 0.08);
+  --upload-active-border: var(--primary);
+}
+
+/* ============================================
+   RESET & BASE
+   ============================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-zh);
+  color: var(--text-primary);
+  background: var(--bg-page);
+  transition: background var(--duration-slow) var(--ease-out),
+              color var(--duration-slow) var(--ease-out);
+  min-height: 100vh;
+}
+
+/* ============================================
+   LAYOUT
+   ============================================ */
+.page-wrapper {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 48px 32px 80px;
+}
+
+.page-header {
+  margin-bottom: 56px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.page-header h1 {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 36px;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+}
+
+.page-header .subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-top: 6px;
+  font-weight: 400;
+}
+
+.page-header .meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.version-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: var(--primary-ghost);
+  color: var(--primary);
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  letter-spacing: 0.5px;
+}
+
+/* Section */
+.section {
+  margin-bottom: 56px;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-tertiary);
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  line-height: 1.7;
+}
+
+/* Component group */
+.component-group {
+  margin-bottom: 40px;
+}
+
+.component-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 14px;
+}
+
+.component-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.component-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.component-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 420px;
+}
+
+.demo-surface {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  transition: background var(--duration-slow) var(--ease-out),
+              border-color var(--duration-slow) var(--ease-out);
+}
+
+/* ============================================
+   THEME TOGGLE
+   ============================================ */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: all var(--duration-fast) var(--ease-out);
+  user-select: none;
+}
+
+.theme-toggle:hover {
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+}
+
+.theme-toggle i {
+  width: 16px;
+  height: 16px;
+}
+
+/* ============================================
+   1. BUTTONS
+   ============================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 18px;
+  height: 36px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  font-family: var(--font-zh);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+  white-space: nowrap;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn i { width: 16px; height: 16px; flex-shrink: 0; }
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--text-on-primary);
+  border-color: var(--primary);
+}
+.btn-primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
+.btn-primary:active { transform: scale(0.97); }
+
+.btn-secondary {
+  background: transparent;
+  color: var(--primary);
+  border-color: var(--border);
+}
+.btn-secondary:hover { background: var(--primary-ghost); border-color: var(--primary-light); }
+
+.btn-text {
+  background: transparent;
+  color: var(--primary);
+  border-color: transparent;
+  padding: 0 10px;
+}
+.btn-text:hover { background: var(--primary-ghost); }
+
+.btn-danger {
+  background: var(--error);
+  color: #fff;
+  border-color: var(--error);
+}
+.btn-danger:hover { background: var(--error-hover); border-color: var(--error-hover); }
+
+.btn-accent {
+  background: var(--accent);
+  color: var(--text-on-accent);
+  border-color: var(--accent);
+}
+.btn-accent:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border-color: transparent;
+}
+.btn-ghost:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+.btn-icon {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid transparent;
+}
+.btn-icon:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+.btn-sm { height: 30px; padding: 0 12px; font-size: 12px; }
+.btn-lg { height: 42px; padding: 0 24px; font-size: 14px; }
+
+.btn:disabled, .btn[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.btn-loading {
+  pointer-events: none;
+  position: relative;
+  color: transparent !important;
+}
+.btn-loading::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+.btn-primary.btn-loading::after { border-color: #fff; border-right-color: transparent; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ============================================
+   2. INPUTS
+   ============================================ */
+.input-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 360px;
+  width: 100%;
+}
+
+.input-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.input-hint {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+.input {
+  height: 36px;
+  padding: 0 12px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-zh);
+  font-size: 13px;
+  color: var(--text-primary);
+  transition: all var(--duration-fast) var(--ease-out);
+  outline: none;
+  width: 100%;
+}
+
+.input::placeholder { color: var(--text-tertiary); }
+
+.input:hover { border-color: var(--border-hover); }
+
+.input:focus {
+  border-color: var(--border-focus);
+  box-shadow: var(--shadow-focus);
+}
+
+.input-error {
+  border-color: var(--border-error);
+}
+.input-error:focus {
+  box-shadow: var(--shadow-focus-error);
+}
+
+.input-success {
+  border-color: var(--accent);
+}
+
+.input-with-icon {
+  position: relative;
+}
+.input-with-icon .input { padding-left: 36px; }
+.input-with-icon .input-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-tertiary);
+  pointer-events: none;
+}
+.input-with-icon .input-icon i { width: 16px; height: 16px; }
+
+.input-password {
+  position: relative;
+}
+.input-password .input { padding-right: 40px; }
+.input-password .toggle-pw {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+  color: var(--text-tertiary);
+  border-radius: var(--radius-sm);
+  transition: color var(--duration-fast);
+}
+.input-password .toggle-pw:hover { color: var(--text-secondary); }
+.input-password .toggle-pw i { width: 16px; height: 16px; display: block; }
+
+.input-search {
+  position: relative;
+}
+.input-search .input { padding-left: 36px; }
+.input-search .search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-tertiary);
+  pointer-events: none;
+}
+.input-search .search-icon i { width: 15px; height: 15px; }
+
+.input-error-msg {
+  font-size: 12px;
+  color: var(--error);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.input-error-msg i { width: 14px; height: 14px; }
+
+.input-textarea {
+  height: auto;
+  min-height: 80px;
+  padding: 10px 12px;
+  resize: vertical;
+}
+
+/* ============================================
+   3. SELECT
+   ============================================ */
+.select {
+  position: relative;
+  max-width: 360px;
+  width: 100%;
+}
+
+.select-trigger {
+  height: 36px;
+  padding: 0 36px 0 12px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-zh);
+  font-size: 13px;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: all var(--duration-fast) var(--ease-out);
+  width: 100%;
+  position: relative;
+  user-select: none;
+}
+
+.select-trigger:hover { border-color: var(--border-hover); }
+.select-trigger.open { border-color: var(--border-focus); box-shadow: var(--shadow-focus); }
+
+.select-trigger .chevron {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-tertiary);
+  transition: transform var(--duration-fast) var(--ease-out);
+  pointer-events: none;
+}
+.select-trigger .chevron i { width: 16px; height: 16px; display: block; }
+.select-trigger.open .chevron { transform: translateY(-50%) rotate(180deg); }
+
+.select-placeholder { color: var(--text-tertiary); }
+
+.select-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 4px;
+  z-index: 100;
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.select-dropdown.open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.select-option {
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background var(--duration-fast);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.select-option:hover { background: var(--bg-hover); }
+.select-option.selected { background: var(--primary-ghost); color: var(--primary); font-weight: 500; }
+.select-option i { width: 14px; height: 14px; color: var(--primary); opacity: 0; }
+.select-option.selected i { opacity: 1; }
+
+/* ============================================
+   4. CHECKBOX & RADIO
+   ============================================ */
+.checkbox-group, .radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.check-item, .radio-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-primary);
+  user-select: none;
+}
+
+.check-box {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--border-hover);
+  border-radius: var(--radius-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--duration-fast) var(--ease-out);
+  flex-shrink: 0;
+  background: var(--bg-input);
+}
+
+.check-item:hover .check-box { border-color: var(--primary-light); }
+
+.check-box.checked {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.check-box.checked i {
+  width: 12px;
+  height: 12px;
+  color: #fff;
+  stroke-width: 3;
+}
+
+.check-box.indeterminate {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.check-box.indeterminate i {
+  width: 12px;
+  height: 12px;
+  color: #fff;
+}
+
+.check-item.disabled, .radio-item.disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.radio-dot {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--border-hover);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--duration-fast) var(--ease-out);
+  flex-shrink: 0;
+  background: var(--bg-input);
+}
+
+.radio-item:hover .radio-dot { border-color: var(--primary-light); }
+
+.radio-dot.checked {
+  border-color: var(--primary);
+}
+
+.radio-dot.checked::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--primary);
+}
+
+/* ============================================
+   5. TOGGLE / SWITCH
+   ============================================ */
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.toggle-track {
+  width: 40px;
+  height: 22px;
+  background: var(--border-hover);
+  border-radius: 11px;
+  position: relative;
+  transition: background var(--duration-fast) var(--ease-out);
+  flex-shrink: 0;
+}
+
+.toggle-thumb {
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform var(--duration-fast) var(--ease-spring);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+
+.toggle.active .toggle-track { background: var(--primary); }
+.toggle.active .toggle-thumb { transform: translateX(18px); }
+
+.toggle.disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* ============================================
+   6. CARDS
+   ============================================ */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+.card-body { padding: 20px; }
+
+.card-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-footer {
+  padding: 12px 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.card-clickable { cursor: pointer; }
+.card-clickable:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+.card-featured {
+  border-color: var(--primary-lighter);
+  background: linear-gradient(135deg, var(--bg-card) 0%, var(--primary-ghost) 100%);
+}
+
+/* ============================================
+   7. PROGRESS BAR
+   ============================================ */
+.progress {
+  width: 100%;
+  max-width: 400px;
+}
+
+.progress-bar {
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 3px;
+  transition: width 0.5s var(--ease-out);
+  position: relative;
+}
+
+.progress-fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.progress-fill.success { background: var(--accent); }
+.progress-fill.warning { background: var(--warning); }
+.progress-fill.error { background: var(--error); }
+
+.progress-indeterminate .progress-fill {
+  width: 30% !important;
+  animation: indeterminate 1.5s var(--ease-out) infinite;
+}
+
+@keyframes indeterminate {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.progress-info .progress-pct {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* ============================================
+   8. BADGES / TAGS
+   ============================================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  line-height: 20px;
+}
+
+.badge-default { background: var(--bg-hover); color: var(--text-secondary); }
+.badge-primary { background: var(--primary-lighter); color: var(--primary); }
+.badge-success { background: var(--accent-light); color: var(--accent-hover); }
+.badge-warning { background: var(--warning-light); color: var(--warning); }
+.badge-error { background: var(--error-light); color: var(--error); }
+.badge-info { background: var(--info-light); color: var(--info); }
+
+.badge-dot::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: var(--bg-hover);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: default;
+}
+
+.tag-close {
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all var(--duration-fast);
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  padding: 0;
+}
+.tag-close:hover { background: var(--error-ghost); color: var(--error); }
+.tag-close i { width: 12px; height: 12px; }
+
+/* ============================================
+   9. TOAST NOTIFICATIONS
+   ============================================ */
+.toast-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 380px;
+}
+
+.toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  animation: toastIn 0.3s var(--ease-out);
+  position: relative;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.toast-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.toast-success .toast-icon { color: var(--accent); }
+.toast-error .toast-icon { color: var(--error); }
+.toast-warning .toast-icon { color: var(--warning); }
+.toast-info .toast-icon { color: var(--info); }
+
+.toast-content { flex: 1; min-width: 0; }
+.toast-title { font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
+.toast-msg { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+
+.toast-close {
+  background: none;
+  border: none;
+  padding: 2px;
+  cursor: pointer;
+  color: var(--text-tertiary);
+  border-radius: var(--radius-xs);
+  transition: all var(--duration-fast);
+  flex-shrink: 0;
+}
+.toast-close:hover { color: var(--text-secondary); background: var(--bg-hover); }
+.toast-close i { width: 14px; height: 14px; display: block; }
+
+.toast-timer {
+  position: absolute;
+  bottom: 0;
+  left: 16px;
+  right: 16px;
+  height: 2px;
+  background: var(--border);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.toast-timer-bar {
+  height: 100%;
+  border-radius: 1px;
+  animation: timer 3s linear forwards;
+}
+
+.toast-success .toast-timer-bar { background: var(--accent); }
+.toast-error .toast-timer-bar { background: var(--error); }
+.toast-warning .toast-timer-bar { background: var(--warning); }
+.toast-info .toast-timer-bar { background: var(--info); }
+
+@keyframes timer {
+  from { width: 100%; }
+  to { width: 0; }
+}
+
+/* ============================================
+   10. BANNER NOTIFICATIONS
+   ============================================ */
+.banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  max-width: 600px;
+}
+
+.banner i { width: 18px; height: 18px; flex-shrink: 0; }
+.banner-content { flex: 1; }
+.banner-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+.banner-warning {
+  background: var(--warning-light);
+  border: 1px solid var(--warning);
+  color: var(--warning-hover);
+}
+.banner-warning i { color: var(--warning); }
+.banner-warning .btn-text { color: var(--warning-hover); font-weight: 600; }
+
+.banner-error {
+  background: var(--error-light);
+  border: 1px solid var(--error);
+  color: var(--error-hover);
+}
+.banner-error i { color: var(--error); }
+.banner-error .btn-text { color: var(--error-hover); font-weight: 600; }
+
+.banner-info {
+  background: var(--info-light);
+  border: 1px solid var(--info);
+  color: var(--info);
+}
+.banner-info i { color: var(--info); }
+
+.banner-success {
+  background: var(--accent-light);
+  border: 1px solid var(--accent);
+  color: var(--accent-hover);
+}
+.banner-success i { color: var(--accent); }
+
+/* ============================================
+   11. MODAL / DIALOG
+   ============================================ */
+.modal-overlay {
+  position: relative;
+  background: rgba(0,0,0,0.4);
+  border-radius: var(--radius-xl);
+  padding: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+}
+
+[data-theme="dark"] .modal-overlay {
+  background: rgba(0,0,0,0.6);
+}
+
+.modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  width: 100%;
+  max-width: 440px;
+  animation: modalIn 0.3s var(--ease-out);
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.95) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal-header {
+  padding: 20px 24px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--text-tertiary);
+  border-radius: var(--radius-sm);
+  transition: all var(--duration-fast);
+}
+.modal-close:hover { color: var(--text-secondary); background: var(--bg-hover); }
+.modal-close i { width: 18px; height: 18px; display: block; }
+
+.modal-body {
+  padding: 0 24px 20px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* ============================================
+   12. TOOLTIP
+   ============================================ */
+.tooltip-demo {
+  display: flex;
+  gap: 40px;
+  padding: 40px 0 20px;
+}
+
+.tooltip-trigger {
+  position: relative;
+  display: inline-flex;
+}
+
+.tooltip-box {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 12px;
+  background: var(--text-primary);
+  color: var(--bg-card);
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--duration-fast);
+}
+
+.tooltip-trigger:hover .tooltip-box { opacity: 1; }
+
+.tooltip-box::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--text-primary);
+}
+
+/* ============================================
+   13. FILE LIST ITEMS
+   ============================================ */
+.file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 500px;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.file-item:hover { border-color: var(--border-hover); }
+
+.file-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.file-icon i { width: 20px; height: 20px; }
+
+.file-icon-pdf { background: var(--error-ghost); color: var(--error); }
+.file-icon-docx { background: var(--primary-ghost); color: var(--primary); }
+.file-icon-done { background: var(--accent-ghost); color: var(--accent); }
+
+.file-info { flex: 1; min-width: 0; }
+.file-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-meta {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.file-status { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+
+.file-progress {
+  width: 80px;
+}
+
+.file-delete {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--text-tertiary);
+  border-radius: var(--radius-sm);
+  transition: all var(--duration-fast);
+}
+.file-delete:hover { color: var(--error); background: var(--error-ghost); }
+.file-delete i { width: 16px; height: 16px; display: block; }
+
+/* ============================================
+   14. UPLOAD ZONE
+   ============================================ */
+.upload-zone {
+  border: 2px dashed var(--upload-border);
+  border-radius: var(--radius-xl);
+  padding: 48px 32px;
+  text-align: center;
+  background: var(--upload-bg);
+  transition: all var(--duration-normal) var(--ease-out);
+  cursor: pointer;
+  max-width: 500px;
+}
+
+.upload-zone:hover {
+  border-color: var(--primary-light);
+  background: var(--primary-ghost);
+}
+
+.upload-zone.drag-over {
+  border-color: var(--upload-active-border);
+  background: var(--upload-active-bg);
+  border-style: solid;
+  transform: scale(1.01);
+}
+
+.upload-zone.drag-over .upload-icon {
+  transform: scale(1.1);
+  color: var(--primary);
+}
+
+.upload-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  color: var(--text-tertiary);
+  transition: all var(--duration-normal) var(--ease-spring);
+}
+
+.upload-icon i { width: 48px; height: 48px; stroke-width: 1.2; }
+
+.upload-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.upload-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.upload-formats {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.upload-format-tag {
+  padding: 3px 10px;
+  background: var(--bg-hover);
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+/* ============================================
+   15. SIDEBAR NAVIGATION
+   ============================================ */
+.sidebar-demo {
+  width: 220px;
+  background: var(--bg-sidebar);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 12px 8px;
+}
+
+.sidebar-section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-tertiary);
+  padding: 8px 12px 6px;
+  margin-top: 8px;
+}
+
+.sidebar-section-label:first-child { margin-top: 0; }
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 450;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+  user-select: none;
+  position: relative;
+}
+
+.nav-item i { width: 18px; height: 18px; flex-shrink: 0; }
+
+.nav-item:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.nav-item.active {
+  background: var(--primary-ghost);
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.nav-item.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  background: var(--primary);
+  border-radius: 0 2px 2px 0;
+}
+
+.nav-badge {
+  margin-left: auto;
+  padding: 1px 7px;
+  background: var(--error);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: var(--radius-full);
+  line-height: 16px;
+}
+
+/* ============================================
+   16. TABS
+   ============================================ */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  gap: 0;
+  max-width: 500px;
+}
+
+.tab {
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all var(--duration-fast) var(--ease-out);
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tab i { width: 16px; height: 16px; }
+
+.tab:hover { color: var(--text-primary); }
+
+.tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  font-weight: 600;
+}
+
+.tab-badge {
+  padding: 0 6px;
+  background: var(--bg-hover);
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  line-height: 18px;
+}
+
+.tab.active .tab-badge {
+  background: var(--primary-ghost);
+  color: var(--primary);
+}
+
+/* ============================================
+   17. ACCORDION / COLLAPSE
+   ============================================ */
+.accordion {
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.accordion-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: border-color var(--duration-fast);
+}
+
+.accordion-item.open { border-color: var(--primary-lighter); }
+
+.accordion-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  user-select: none;
+  transition: background var(--duration-fast);
+}
+
+.accordion-header:hover { background: var(--bg-hover); }
+
+.accordion-chevron {
+  width: 16px;
+  height: 16px;
+  color: var(--text-tertiary);
+  transition: transform var(--duration-fast) var(--ease-out);
+  flex-shrink: 0;
+}
+
+.accordion-item.open .accordion-chevron { transform: rotate(90deg); }
+
+.accordion-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.accordion-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--duration-normal) var(--ease-out);
+}
+
+.accordion-item.open .accordion-body { max-height: 200px; }
+
+.accordion-content {
+  padding: 0 16px 16px 44px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+  .page-wrapper { padding: 24px 16px 60px; }
+  .page-header { flex-direction: column; }
+  .component-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <!-- ============ HEADER ============ -->
+  <header class="page-header">
+    <div>
+      <h1>英文转中文翻译工具</h1>
+      <div class="subtitle">UI 组件库 &middot; 设计系统规范文档</div>
+    </div>
+    <div class="meta">
+      <span class="version-badge">v1.0.0</span>
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">
+        <i data-lucide="moon"></i>
+        <span>暗色模式</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============ 1. BUTTONS ============ -->
+  <section class="section">
+    <h2 class="section-title">01 &middot; 按钮 Buttons</h2>
+
+    <div class="component-group">
+      <div class="component-label">主要按钮</div>
+      <div class="component-row">
+        <button class="btn btn-primary">开始翻译</button>
+        <button class="btn btn-primary"><i data-lucide="upload"></i>上传文件</button>
+        <button class="btn btn-primary btn-sm">小按钮</button>
+        <button class="btn btn-primary btn-lg">大按钮</button>
+        <button class="btn btn-primary" disabled>禁用状态</button>
+        <button class="btn btn-primary btn-loading">加载中</button>
+      </div>
+    </div>
+
+    <div class="component-group">
+      <div class="component-label">次要按钮</div>
+      <div class="component-row">
+        <button class="btn btn-secondary">取消</button>
+        <button class="btn btn-secondary"><i data-lucide="settings"></i>设置</button>
+        <button class="btn btn-secondary" disabled>禁用</button>
+      </div>
+    </div>
+
+    <div class="component-group">
+      <div class="component-label">文字按钮 & 其他</div>
+      <div class="component-row">
+        <button class="btn btn-text">了解更多</button>
+        <button class="btn btn-text"><i data-lucide="external-link"></i>查看详情</button>
+        <button class="btn btn-ghost">次要操作</button>
+        <button class="btn btn-danger"><i data-lucide="trash-2"></i>删除</button>
+        <button class="btn btn-accent"><i data-lucide="check"></i>确认</button>
+      </div>
+    </div>
+
+    <div class="component-group">
+      <div class="component-label">图标按钮</div>
+      <div class="component-row">
+        <button class="btn-icon"><i data-lucide="settings"></i></button>
+        <button class="btn-icon"><i data-lucide="search"></i></button>
+        <button class="btn-icon"><i data-lucide="bell"></i></button>
+        <button class="btn-icon"><i data-lucide="more-horizontal"></i></button>
+        <button class="btn-icon"><i data-lucide="x"></i></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. INPUTS ============ -->
+  <section class="section">
+    <h2 class="section-title">02 &middot; 输入框 Inputs</h2>
+
+    <div class="component-grid">
+      <div class="input-wrapper">
+        <label class="input-label">默认输入框</label>
+        <input type="text" class="input" placeholder="请输入内容...">
+        <span class="input-hint">支持中英文输入</span>
+      </div>
+
+      <div class="input-wrapper">
+        <label class="input-label">带图标输入框</label>
+        <div class="input-with-icon">
+          <span class="input-icon"><i data-lucide="search"></i></span>
+          <input type="text" class="input" placeholder="搜索翻译记录...">
+        </div>
+      </div>
+
+      <div class="input-wrapper">
+        <label class="input-label">密码输入框</label>
+        <div class="input-password">
+          <input type="password" class="input" placeholder="请输入 API Key" value="sk-abc123456789">
+          <button class="toggle-pw" onclick="this.previousElementSibling.type = this.previousElementSibling.type === 'password' ? 'text' : 'password'">
+            <i data-lucide="eye"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="input-wrapper">
+        <label class="input-label">搜索框</label>
+        <div class="input-search">
+          <span class="search-icon"><i data-lucide="search"></i></span>
+          <input type="text" class="input" placeholder="搜索术语...">
+        </div>
+      </div>
+
+      <div class="input-wrapper">
+        <label class="input-label">错误状态</label>
+        <input type="text" class="input input-error" value="无效的输入">
+        <span class="input-error-msg"><i data-lucide="alert-circle"></i>请输入有效的授权码格式</span>
+      </div>
+
+      <div class="input-wrapper">
+        <label class="input-label">成功状态</label>
+        <input type="text" class="input input-success" value="连接成功">
+      </div>
+
+      <div class="input-wrapper">
+        <label class="input-label">禁用状态</label>
+        <input type="text" class="input" value="不可编辑" disabled>
+      </div>
+
+      <div class="input-wrapper">
+        <label class="input-label">数字输入</label>
+        <input type="number" class="input" placeholder="页数" value="50" min="1" max="999">
+      </div>
+    </div>
+
+    <div class="component-group" style="margin-top: 16px; max-width: 500px;">
+      <div class="component-label">文本域</div>
+      <div class="input-wrapper" style="max-width: 100%;">
+        <textarea class="input input-textarea" placeholder="输入自定义翻译提示词..."></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. SELECT ============ -->
+  <section class="section">
+    <h2 class="section-title">03 &middot; 下拉选择 Select</h2>
+
+    <div class="component-grid">
+      <div class="select" id="select1">
+        <div class="select-trigger" onclick="toggleSelect('select1')">
+          <span>DeepSeek</span>
+          <span class="chevron"><i data-lucide="chevron-down"></i></span>
+        </div>
+        <div class="select-dropdown" id="select1-dropdown">
+          <div class="select-option selected" onclick="selectOption('select1', this)"><i data-lucide="check"></i>DeepSeek</div>
+          <div class="select-option" onclick="selectOption('select1', this)"><i data-lucide="check"></i>GPT-4</div>
+          <div class="select-option" onclick="selectOption('select1', this)"><i data-lucide="check"></i>Claude</div>
+          <div class="select-option" onclick="selectOption('select1', this)"><i data-lucide="check"></i>通义千问</div>
+        </div>
+      </div>
+
+      <div class="select" id="select2">
+        <div class="select-trigger" onclick="toggleSelect('select2')">
+          <span>商务通用</span>
+          <span class="chevron"><i data-lucide="chevron-down"></i></span>
+        </div>
+        <div class="select-dropdown" id="select2-dropdown">
+          <div class="select-option" onclick="selectOption('select2', this)"><i data-lucide="check"></i>学术正式</div>
+          <div class="select-option selected" onclick="selectOption('select2', this)"><i data-lucide="check"></i>商务通用</div>
+          <div class="select-option" onclick="selectOption('select2', this)"><i data-lucide="check"></i>日常口语</div>
+        </div>
+      </div>
+
+      <div class="select" id="select3">
+        <div class="select-trigger" onclick="toggleSelect('select3')">
+          <span class="select-placeholder">选择术语表...</span>
+          <span class="chevron"><i data-lucide="chevron-down"></i></span>
+        </div>
+        <div class="select-dropdown" id="select3-dropdown">
+          <div class="select-option" onclick="selectOption('select3', this)"><i data-lucide="check"></i>计算机术语表 (128条)</div>
+          <div class="select-option" onclick="selectOption('select3', this)"><i data-lucide="check"></i>医学术语表 (256条)</div>
+          <div class="select-option" onclick="selectOption('select3', this)"><i data-lucide="check"></i>金融术语表 (89条)</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. CHECKBOX & RADIO ============ -->
+  <section class="section">
+    <h2 class="section-title">04 &middot; 复选框 & 单选框</h2>
+
+    <div class="component-grid">
+      <div>
+        <div class="component-label">复选框 Checkbox</div>
+        <div class="checkbox-group">
+          <label class="check-item" onclick="toggleCheck(this)">
+            <span class="check-box checked"><i data-lucide="check"></i></span>
+            <span>计算机术语表 (128条)</span>
+          </label>
+          <label class="check-item" onclick="toggleCheck(this)">
+            <span class="check-box"><i data-lucide="check"></i></span>
+            <span>医学术语表 (256条)</span>
+          </label>
+          <label class="check-item" onclick="toggleCheck(this)">
+            <span class="check-box checked"><i data-lucide="check"></i></span>
+            <span>用户自定义 (12条)</span>
+          </label>
+          <label class="check-item disabled">
+            <span class="check-box"><i data-lucide="check"></i></span>
+            <span>金融术语表 (未购买)</span>
+          </label>
+          <label class="check-item" onclick="toggleCheck(this)">
+            <span class="check-box indeterminate"><i data-lucide="minus"></i></span>
+            <span>部分选中状态</span>
+          </label>
+        </div>
+      </div>
+
+      <div>
+        <div class="component-label">单选框 Radio</div>
+        <div class="radio-group">
+          <label class="radio-item" onclick="selectRadio(this)">
+            <span class="radio-dot checked"></span>
+            <span>使用产品内置额度</span>
+          </label>
+          <label class="radio-item" onclick="selectRadio(this)">
+            <span class="radio-dot"></span>
+            <span>自备 API Key</span>
+          </label>
+          <label class="radio-item" onclick="selectRadio(this)">
+            <span class="radio-dot"></span>
+            <span>混合模式 (免费额度 + 自备 Key)</span>
+          </label>
+          <label class="radio-item disabled">
+            <span class="radio-dot"></span>
+            <span>离线模式 (不可用)</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5. TOGGLE ============ -->
+  <section class="section">
+    <h2 class="section-title">05 &middot; 开关 Toggle</h2>
+
+    <div class="component-row">
+      <div class="toggle active" onclick="this.classList.toggle('active')">
+        <span class="toggle-track"><span class="toggle-thumb"></span></span>
+        <span>自动保存翻译记录</span>
+      </div>
+      <div class="toggle" onclick="this.classList.toggle('active')">
+        <span class="toggle-track"><span class="toggle-thumb"></span></span>
+        <span>启用术语表</span>
+      </div>
+      <div class="toggle disabled">
+        <span class="toggle-track"><span class="toggle-thumb"></span></span>
+        <span>离线模式 (不可用)</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 6. CARDS ============ -->
+  <section class="section">
+    <h2 class="section-title">06 &middot; 卡片 Cards</h2>
+
+    <div class="component-grid">
+      <div class="card">
+        <div class="card-header">
+          <span>翻译统计</span>
+          <span class="badge badge-primary badge-dot">本月</span>
+        </div>
+        <div class="card-body">
+          <div style="font-size: 28px; font-weight: 700; font-family: var(--font-mono); color: var(--text-primary);">1,247</div>
+          <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">已翻译文档数</div>
+          <div style="margin-top: 12px; display: flex; gap: 16px; font-size: 12px; color: var(--text-tertiary);">
+            <span><span style="color: var(--accent);">+12%</span> 较上月</span>
+            <span>日均 42 篇</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-clickable">
+        <div class="card-body" style="text-align: center; padding: 32px 20px;">
+          <div style="width: 48px; height: 48px; background: var(--primary-ghost); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;">
+            <i data-lucide="file-text" style="width: 24px; height: 24px; color: var(--primary);"></i>
+          </div>
+          <div style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">Word 翻译</div>
+          <div style="font-size: 12px; color: var(--text-secondary);">支持 .docx 格式，排版完美保持</div>
+        </div>
+      </div>
+
+      <div class="card card-featured">
+        <div class="card-body">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+            <span class="badge badge-warning badge-dot">翻译中</span>
+            <span style="font-size: 12px; color: var(--text-tertiary);">预计剩余 2 分钟</span>
+          </div>
+          <div style="font-size: 14px; font-weight: 500; color: var(--text-primary); margin-bottom: 8px;">Annual_Report_2024.pdf</div>
+          <div class="progress">
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 65%;"></div>
+            </div>
+            <div class="progress-info">
+              <span>正在翻译第 32/50 段...</span>
+              <span class="progress-pct">65%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 7. PROGRESS BAR ============ -->
+  <section class="section">
+    <h2 class="section-title">07 &middot; 进度条 Progress</h2>
+
+    <div class="component-stack">
+      <div class="progress">
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 72%;"></div>
+        </div>
+        <div class="progress-info">
+          <span>翻译进度</span>
+          <span class="progress-pct">72%</span>
+        </div>
+      </div>
+
+      <div class="progress">
+        <div class="progress-bar">
+          <div class="progress-fill success" style="width: 100%;"></div>
+        </div>
+        <div class="progress-info">
+          <span>翻译完成</span>
+          <span class="progress-pct" style="color: var(--accent);">100%</span>
+        </div>
+      </div>
+
+      <div class="progress">
+        <div class="progress-bar">
+          <div class="progress-fill warning" style="width: 45%;"></div>
+        </div>
+        <div class="progress-info">
+          <span>API 额度剩余</span>
+          <span class="progress-pct" style="color: var(--warning);">45%</span>
+        </div>
+      </div>
+
+      <div class="progress">
+        <div class="progress-bar">
+          <div class="progress-fill error" style="width: 90%;"></div>
+        </div>
+        <div class="progress-info">
+          <span>存储空间</span>
+          <span class="progress-pct" style="color: var(--error);">90%</span>
+        </div>
+      </div>
+
+      <div class="progress progress-indeterminate">
+        <div class="progress-bar">
+          <div class="progress-fill"></div>
+        </div>
+        <div class="progress-info">
+          <span>正在解析文档...</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 8. BADGES & TAGS ============ -->
+  <section class="section">
+    <h2 class="section-title">08 &middot; 徽章 & 标签 Badges & Tags</h2>
+
+    <div class="component-group">
+      <div class="component-label">徽章 Badges</div>
+      <div class="component-row">
+        <span class="badge badge-default">默认</span>
+        <span class="badge badge-primary">主要</span>
+        <span class="badge badge-success">成功</span>
+        <span class="badge badge-warning">警告</span>
+        <span class="badge badge-error">错误</span>
+        <span class="badge badge-info">信息</span>
+      </div>
+      <div class="component-row" style="margin-top: 8px;">
+        <span class="badge badge-success badge-dot">已激活</span>
+        <span class="badge badge-warning badge-dot">翻译中</span>
+        <span class="badge badge-error badge-dot">已过期</span>
+        <span class="badge badge-primary badge-dot">专业版</span>
+      </div>
+    </div>
+
+    <div class="component-group">
+      <div class="component-label">标签 Tags</div>
+      <div class="component-row">
+        <span class="tag">PDF <button class="tag-close"><i data-lucide="x"></i></button></span>
+        <span class="tag">Word <button class="tag-close"><i data-lucide="x"></i></button></span>
+        <span class="tag">学术正式 <button class="tag-close"><i data-lucide="x"></i></button></span>
+        <span class="tag">计算机术语表</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 9. TOAST NOTIFICATIONS ============ -->
+  <section class="section">
+    <h2 class="section-title">09 &middot; 通知 Toast</h2>
+
+    <div class="toast-container">
+      <div class="toast toast-success">
+        <i data-lucide="check-circle" class="toast-icon"></i>
+        <div class="toast-content">
+          <div class="toast-title">翻译完成</div>
+          <div class="toast-msg">report.docx 已成功翻译为中文版本</div>
+        </div>
+        <button class="toast-close"><i data-lucide="x"></i></button>
+        <div class="toast-timer"><div class="toast-timer-bar"></div></div>
+      </div>
+
+      <div class="toast toast-error">
+        <i data-lucide="x-circle" class="toast-icon"></i>
+        <div class="toast-content">
+          <div class="toast-title">翻译失败</div>
+          <div class="toast-msg">API 请求超时，请检查网络连接后重试</div>
+        </div>
+        <button class="toast-close"><i data-lucide="x"></i></button>
+        <div class="toast-timer"><div class="toast-timer-bar"></div></div>
+      </div>
+
+      <div class="toast toast-warning">
+        <i data-lucide="alert-triangle" class="toast-icon"></i>
+        <div class="toast-content">
+          <div class="toast-title">API 额度不足</div>
+          <div class="toast-msg">产品额度仅剩 ¥2.50，建议充值或切换自备 Key</div>
+        </div>
+        <button class="toast-close"><i data-lucide="x"></i></button>
+        <div class="toast-timer"><div class="toast-timer-bar"></div></div>
+      </div>
+
+      <div class="toast toast-info">
+        <i data-lucide="info" class="toast-icon"></i>
+        <div class="toast-content">
+          <div class="toast-title">新版本可用</div>
+          <div class="toast-msg">v1.1.0 已发布，新增 OCR 功能支持</div>
+        </div>
+        <button class="toast-close"><i data-lucide="x"></i></button>
+        <div class="toast-timer"><div class="toast-timer-bar"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 10. BANNER NOTIFICATIONS ============ -->
+  <section class="section">
+    <h2 class="section-title">10 &middot; 横幅通知 Banners</h2>
+
+    <div class="component-stack">
+      <div class="banner banner-warning">
+        <i data-lucide="wifi-off"></i>
+        <span class="content">网络连接已断开，翻译功能暂时不可用</span>
+        <div class="banner-actions">
+          <button class="btn btn-text btn-sm">重试</button>
+          <button class="btn btn-text btn-sm">离线模式</button>
+        </div>
+      </div>
+
+      <div class="banner banner-error">
+        <i data-lucide="shield-alert"></i>
+        <span class="content">授权码已过期，请续费以继续使用完整功能</span>
+        <div class="banner-actions">
+          <button class="btn btn-text btn-sm">续费</button>
+          <button class="btn btn-text btn-sm">联系客服</button>
+        </div>
+      </div>
+
+      <div class="banner banner-info">
+        <i data-lucide="info"></i>
+        <span class="content">检测到新版可用 (v1.1.0)，新增 OCR 扫描版 PDF 支持</span>
+        <div class="banner-actions">
+          <button class="btn btn-text btn-sm">立即更新</button>
+        </div>
+      </div>
+
+      <div class="banner banner-success">
+        <i data-lucide="check-circle"></i>
+        <span class="content">授权激活成功！欢迎使用专业版</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 11. MODAL / DIALOG ============ -->
+  <section class="section">
+    <h2 class="section-title">11 &middot; 对话框 Modal</h2>
+
+    <div class="modal-overlay">
+      <div class="modal">
+        <div class="modal-header">
+          <span class="modal-title">确认删除术语表</span>
+          <button class="modal-close"><i data-lucide="x"></i></button>
+        </div>
+        <div class="modal-body">
+          确定要删除「计算机术语表」吗？此操作不可撤销，术语表中的 128 条术语将被永久删除。
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary">取消</button>
+          <button class="btn btn-danger">确认删除</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 12. TOOLTIP ============ -->
+  <section class="section">
+    <h2 class="section-title">12 &middot; 提示 Tooltip</h2>
+
+    <div class="tooltip-demo">
+      <div class="tooltip-trigger">
+        <button class="btn-icon"><i data-lucide="info"></i></button>
+        <span class="tooltip-box">点击查看翻译详情</span>
+      </div>
+      <div class="tooltip-trigger">
+        <button class="btn btn-secondary btn-sm">API Key</button>
+        <span class="tooltip-box">用于调用翻译模型的密钥</span>
+      </div>
+      <div class="tooltip-trigger">
+        <span class="badge badge-success badge-dot">已激活</span>
+        <span class="tooltip-box">专业版 · 终身有效</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 13. FILE LIST ============ -->
+  <section class="section">
+    <h2 class="section-title">13 &middot; 文件列表 File List</h2>
+
+    <div class="file-list">
+      <div class="file-item">
+        <div class="file-icon file-icon-done"><i data-lucide="file-check"></i></div>
+        <div class="file-info">
+          <div class="file-name">Annual_Report_2024.pdf</div>
+          <div class="file-meta">
+            <span>2.4 MB</span>
+            <span>&middot;</span>
+            <span>50 页</span>
+            <span>&middot;</span>
+            <span>3 分钟前</span>
+          </div>
+        </div>
+        <div class="file-status">
+          <span class="badge badge-success badge-dot">已完成</span>
+        </div>
+        <button class="file-delete"><i data-lucide="trash-2"></i></button>
+      </div>
+
+      <div class="file-item">
+        <div class="file-icon file-icon-docx"><i data-lucide="file-text"></i></div>
+        <div class="file-info">
+          <div class="file-name">Research_Paper_Draft.docx</div>
+          <div class="file-meta">
+            <span>856 KB</span>
+            <span>&middot;</span>
+            <span>18 页</span>
+          </div>
+        </div>
+        <div class="file-status">
+          <span class="badge badge-warning badge-dot">翻译中</span>
+          <div class="file-progress">
+            <div class="progress-bar" style="height: 4px;">
+              <div class="progress-fill" style="width: 45%;"></div>
+            </div>
+          </div>
+        </div>
+        <button class="file-delete"><i data-lucide="x"></i></button>
+      </div>
+
+      <div class="file-item">
+        <div class="file-icon file-icon-pdf"><i data-lucide="file-text"></i></div>
+        <div class="file-info">
+          <div class="file-name">GAMAK_Invoice_20260507.pdf</div>
+          <div class="file-meta">
+            <span>66 KB</span>
+            <span>&middot;</span>
+            <span>2 页</span>
+            <span>&middot;</span>
+            <span>等待中</span>
+          </div>
+        </div>
+        <div class="file-status">
+          <span class="badge badge-default">排队中</span>
+        </div>
+        <button class="file-delete"><i data-lucide="trash-2"></i></button>
+      </div>
+
+      <div class="file-item" style="border-color: var(--error); background: var(--error-ghost);">
+        <div class="file-icon" style="background: var(--error-ghost); color: var(--error);"><i data-lucide="file-warning"></i></div>
+        <div class="file-info">
+          <div class="file-name">unsupported_file.xlsx</div>
+          <div class="file-meta" style="color: var(--error);">
+            <span>格式不支持</span>
+          </div>
+        </div>
+        <div class="file-status">
+          <span class="badge badge-error">错误</span>
+        </div>
+        <button class="file-delete"><i data-lucide="trash-2"></i></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 14. UPLOAD ZONE ============ -->
+  <section class="section">
+    <h2 class="section-title">14 &middot; 上传区域 Upload Zone</h2>
+
+    <div style="display: flex; gap: 24px; flex-wrap: wrap;">
+      <div class="upload-zone" id="uploadDefault">
+        <div class="upload-icon"><i data-lucide="cloud-upload"></i></div>
+        <div class="upload-title">拖拽文件到此处上传</div>
+        <div class="upload-desc">或点击选择文件，支持批量上传</div>
+        <div class="upload-formats">
+          <span class="upload-format-tag">.PDF</span>
+          <span class="upload-format-tag">.DOCX</span>
+          <span class="upload-format-tag">.DOC</span>
+        </div>
+      </div>
+
+      <div class="upload-zone drag-over" id="uploadActive">
+        <div class="upload-icon"><i data-lucide="upload"></i></div>
+        <div class="upload-title">松开鼠标上传文件</div>
+        <div class="upload-desc">检测到 2 个文件</div>
+        <div class="upload-formats">
+          <span class="upload-format-tag">.PDF</span>
+          <span class="upload-format-tag">.DOCX</span>
+          <span class="upload-format-tag">.DOC</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 15. SIDEBAR NAV ============ -->
+  <section class="section">
+    <h2 class="section-title">15 &middot; 侧边栏导航 Sidebar Nav</h2>
+
+    <div class="sidebar-demo">
+      <div class="sidebar-section-label">主要功能</div>
+      <div class="nav-item active">
+        <i data-lucide="layout-dashboard"></i>
+        <span>工作台</span>
+      </div>
+      <div class="nav-item">
+        <i data-lucide="history"></i>
+        <span>翻译记录</span>
+        <span class="nav-badge">12</span>
+      </div>
+      <div class="nav-item">
+        <i data-lucide="book-open"></i>
+        <span>术语表</span>
+      </div>
+      <div class="nav-item">
+        <i data-lucide="file-stack"></i>
+        <span>批量翻译</span>
+      </div>
+
+      <div class="sidebar-section-label">系统</div>
+      <div class="nav-item">
+        <i data-lucide="settings"></i>
+        <span>翻译设置</span>
+      </div>
+      <div class="nav-item">
+        <i data-lucide="user-circle"></i>
+        <span>账户信息</span>
+      </div>
+      <div class="nav-item">
+        <i data-lucide="life-buoy"></i>
+        <span>帮助与反馈</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 16. TABS ============ -->
+  <section class="section">
+    <h2 class="section-title">16 &middot; 选项卡 Tabs</h2>
+
+    <div class="tabs">
+      <div class="tab active" onclick="activateTab(this)">
+        <i data-lucide="file-text"></i>
+        <span>文档翻译</span>
+        <span class="tab-badge">3</span>
+      </div>
+      <div class="tab" onclick="activateTab(this)">
+        <i data-lucide="table"></i>
+        <span>表格预览</span>
+      </div>
+      <div class="tab" onclick="activateTab(this)">
+        <i data-lucide="image"></i>
+        <span>图片翻译</span>
+      </div>
+      <div class="tab" onclick="activateTab(this)">
+        <i data-lucide="settings"></i>
+        <span>高级设置</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 17. ACCORDION ============ -->
+  <section class="section">
+    <h2 class="section-title">17 &middot; 折叠面板 Accordion</h2>
+
+    <div class="accordion">
+      <div class="accordion-item open">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <i data-lucide="chevron-right" class="accordion-chevron"></i>
+          <span class="accordion-title">翻译风格说明</span>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-content">
+            <strong>学术正式</strong>：适合论文、研究报告等学术场景，用词严谨，句式规范。<br>
+            <strong>商务通用</strong>：适合商务邮件、报告、合同等，专业但不生硬。<br>
+            <strong>日常口语</strong>：适合日常文档、博客等，通俗易懂，自然流畅。
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <i data-lucide="chevron-right" class="accordion-chevron"></i>
+          <span class="accordion-title">支持的文件格式</span>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-content">
+            当前支持 PDF（文字版 + 扫描版）和 Word (.docx/.doc) 格式。后续版本将支持 PPT、Excel 等格式。
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <i data-lucide="chevron-right" class="accordion-chevron"></i>
+          <span class="accordion-title">API 额度如何计算？</span>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-content">
+            API 额度按翻译消耗的 token 数量计费。平均一页 A4 文档约消耗 2000-3000 token。建议使用 DeepSeek 模型，性价比最高。
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+// ============ Theme Toggle ============
+function toggleTheme() {
+  const html = document.documentElement;
+  const btn = document.getElementById('themeBtn');
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  btn.querySelector('span').textContent = isDark ? '暗色模式' : '亮色模式';
+  btn.querySelector('i').setAttribute('data-lucide', isDark ? 'moon' : 'sun');
+  lucide.createIcons();
+}
+
+// ============ Select ============
+function toggleSelect(id) {
+  const el = document.getElementById(id);
+  const trigger = el.querySelector('.select-trigger');
+  const dropdown = el.querySelector('.select-dropdown');
+  const isOpen = trigger.classList.contains('open');
+
+  // Close all first
+  document.querySelectorAll('.select-trigger.open').forEach(t => t.classList.remove('open'));
+  document.querySelectorAll('.select-dropdown.open').forEach(d => d.classList.remove('open'));
+
+  if (!isOpen) {
+    trigger.classList.add('open');
+    dropdown.classList.add('open');
+  }
+}
+
+function selectOption(id, opt) {
+  const el = document.getElementById(id);
+  el.querySelectorAll('.select-option').forEach(o => o.classList.remove('selected'));
+  opt.classList.add('selected');
+  el.querySelector('.select-trigger span:first-child').textContent = opt.textContent.trim();
+  el.querySelector('.select-trigger').classList.remove('open');
+  el.querySelector('.select-dropdown').classList.remove('open');
+}
+
+// Close select on outside click
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.select')) {
+    document.querySelectorAll('.select-trigger.open').forEach(t => t.classList.remove('open'));
+    document.querySelectorAll('.select-dropdown.open').forEach(d => d.classList.remove('open'));
+  }
+});
+
+// ============ Checkbox ============
+function toggleCheck(item) {
+  if (item.classList.contains('disabled')) return;
+  const box = item.querySelector('.check-box');
+  box.classList.toggle('checked');
+  box.classList.remove('indeterminate');
+}
+
+// ============ Radio ============
+function selectRadio(item) {
+  if (item.classList.contains('disabled')) return;
+  const group = item.closest('.radio-group');
+  group.querySelectorAll('.radio-dot').forEach(d => d.classList.remove('checked'));
+  item.querySelector('.radio-dot').classList.add('checked');
+}
+
+// ============ Tabs ============
+function activateTab(tab) {
+  const tabs = tab.closest('.tabs');
+  tabs.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+}
+
+// ============ Accordion ============
+function toggleAccordion(header) {
+  const item = header.closest('.accordion-item');
+  item.classList.toggle('open');
+}
+
+// ============ Init Lucide Icons ============
+lucide.createIcons();
+</script>
+
+</body>
+</html>

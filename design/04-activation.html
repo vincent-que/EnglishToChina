@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>激活授权 — 英文转中文翻译工具</title>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary:#1E3A5F;--primary-hover:#16304F;--primary-light:#4A7AB5;--primary-lighter:#D6E4F0;--primary-ghost:rgba(30,58,95,0.06);
+  --accent:#2ECC71;--accent-hover:#27AE60;--accent-light:#D5F5E3;--accent-ghost:rgba(46,204,113,0.08);
+  --warning:#F39C12;--warning-light:#FEF3D5;--warning-ghost:rgba(243,156,18,0.08);
+  --error:#E74C3C;--error-light:#FDEDEC;--error-ghost:rgba(231,76,60,0.08);
+  --info:#3498DB;--info-light:#D6EAF8;
+  --bg-page:#F8F9FA;--bg-card:#FFFFFF;--bg-input:#FFFFFF;
+  --border:#E9ECEF;--border-hover:#CED4DA;--border-focus:var(--primary-light);--border-error:var(--error);
+  --text-primary:#2C3E50;--text-secondary:#6C757D;--text-tertiary:#ADB5BD;--text-on-primary:#FFFFFF;
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.08);--shadow-md:0 4px 12px rgba(0,0,0,0.10);--shadow-lg:0 8px 24px rgba(0,0,0,0.14);
+  --shadow-focus:0 0 0 3px rgba(74,122,181,0.25);--shadow-focus-error:0 0 0 3px rgba(231,76,60,0.2);
+  --radius-sm:4px;--radius-md:6px;--radius-lg:8px;--radius-xl:12px;--radius-2xl:16px;--radius-full:9999px;
+  --ease-out:cubic-bezier(0.4,0,0.2,1);--ease-spring:cubic-bezier(0.34,1.56,0.64,1);
+  --duration-fast:150ms;--duration-normal:250ms;--duration-slow:400ms;
+  --font-zh:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+  --font-en:"DM Sans",-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-mono:"JetBrains Mono","Consolas",monospace;
+  --font-display:"DM Sans",var(--font-zh);
+}
+[data-theme="dark"] {
+  --primary:#4A90D9;--primary-hover:#5A9FE8;--primary-light:#6BA3E0;--primary-lighter:#1E3A5F;--primary-ghost:rgba(74,144,217,0.1);
+  --accent:#2ECC71;--accent-hover:#3DDB80;--accent-light:#1A3A2A;--accent-ghost:rgba(46,204,113,0.1);
+  --warning:#F5B731;--warning-light:#3A3020;--warning-ghost:rgba(245,183,49,0.1);
+  --error:#FF6B6B;--error-light:#3A2020;--error-ghost:rgba(255,107,107,0.1);
+  --info:#5DADE2;--info-light:#1A2A3A;
+  --bg-page:#0F1117;--bg-card:#16213E;--bg-input:#1A2744;
+  --border:#2A2A4A;--border-hover:#3A3A5A;--border-focus:var(--primary);--border-error:var(--error);
+  --text-primary:#E8E8E8;--text-secondary:#A0A0B0;--text-tertiary:#6A6A7A;--text-on-primary:#FFFFFF;
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.3);--shadow-md:0 4px 12px rgba(0,0,0,0.35);--shadow-lg:0 8px 24px rgba(0,0,0,0.4);
+  --shadow-focus:0 0 0 3px rgba(74,144,217,0.3);--shadow-focus-error:0 0 0 3px rgba(255,107,107,0.25);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font-zh);color:var(--text-primary);background:var(--bg-page);transition:background var(--duration-slow) var(--ease-out),color var(--duration-slow) var(--ease-out);min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+/* Background pattern */
+body::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 30% 20%,rgba(30,58,95,0.03) 0%,transparent 50%),radial-gradient(circle at 70% 80%,rgba(46,204,113,0.02) 0%,transparent 50%);pointer-events:none}
+[data-theme="dark"] body::before{background:radial-gradient(circle at 30% 20%,rgba(74,144,217,0.05) 0%,transparent 50%),radial-gradient(circle at 70% 80%,rgba(46,204,113,0.03) 0%,transparent 50%)}
+/* Theme toggle */
+.theme-toggle{position:fixed;top:20px;right:20px;display:flex;align-items:center;gap:8px;padding:6px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-full);cursor:pointer;font-size:13px;font-weight:500;color:var(--text-secondary);transition:all var(--duration-fast);z-index:10}
+.theme-toggle:hover{border-color:var(--border-hover);color:var(--text-primary)}
+.theme-toggle i{width:16px;height:16px}
+/* Card */
+.activation-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-2xl);box-shadow:var(--shadow-lg);width:100%;max-width:460px;padding:48px 40px;text-align:center;position:relative;z-index:1;animation:cardIn 0.5s var(--ease-out)}
+@keyframes cardIn{from{opacity:0;transform:translateY(16px) scale(0.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+/* Logo */
+.logo{width:64px;height:64px;background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);border-radius:var(--radius-xl);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:0 8px 24px rgba(30,58,95,0.2)}
+[data-theme="dark"] .logo{box-shadow:0 8px 24px rgba(74,144,217,0.3)}
+.logo i{width:32px;height:32px;color:#fff}
+/* Title */
+.title{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--text-primary);margin-bottom:8px;letter-spacing:-0.3px}
+.subtitle{font-size:14px;color:var(--text-secondary);margin-bottom:32px}
+/* License input */
+.license-inputs{display:flex;gap:10px;justify-content:center;margin-bottom:24px}
+.license-input{width:80px;height:52px;background:var(--bg-input);border:2px solid var(--border);border-radius:var(--radius-lg);font-family:var(--font-mono);font-size:20px;font-weight:600;text-align:center;color:var(--text-primary);outline:none;transition:all var(--duration-fast) var(--ease-out);letter-spacing:3px;text-transform:uppercase}
+.license-input::placeholder{color:var(--text-tertiary);font-size:14px;letter-spacing:0}
+.license-input:hover{border-color:var(--border-hover)}
+.license-input:focus{border-color:var(--border-focus);box-shadow:var(--shadow-focus)}
+.license-input.error{border-color:var(--border-error);box-shadow:var(--shadow-focus-error);animation:shake 0.4s var(--ease-out)}
+.license-input.success{border-color:var(--accent)}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-4px)}40%,80%{transform:translateX(4px)}}
+.license-sep{display:flex;align-items:center;font-size:20px;color:var(--text-tertiary);font-weight:300;padding-bottom:4px}
+/* Activate button */
+.btn-activate{width:100%;height:48px;background:var(--primary);color:var(--text-on-primary);border:none;border-radius:var(--radius-lg);font-family:var(--font-zh);font-size:15px;font-weight:600;cursor:pointer;transition:all var(--duration-fast) var(--ease-out);display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:16px}
+.btn-activate:hover{background:var(--primary-hover);transform:translateY(-1px);box-shadow:0 4px 12px rgba(30,58,95,0.2)}
+.btn-activate:active{transform:translateY(0)}
+.btn-activate:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-activate i{width:18px;height:18px}
+.btn-activate.loading{pointer-events:none;color:transparent}
+.btn-activate.loading::after{content:"";position:absolute;width:20px;height:20px;border:2px solid #fff;border-right-color:transparent;border-radius:50%;animation:spin 0.6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.btn-activate.success{background:var(--accent)}
+.btn-activate.error{background:var(--error)}
+/* Divider */
+.divider{display:flex;align-items:center;gap:16px;margin:20px 0;color:var(--text-tertiary);font-size:12px}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--border)}
+/* Trial button */
+.btn-trial{width:100%;height:42px;background:transparent;color:var(--primary);border:1px solid var(--border);border-radius:var(--radius-lg);font-family:var(--font-zh);font-size:14px;font-weight:500;cursor:pointer;transition:all var(--duration-fast) var(--ease-out);display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-trial:hover{background:var(--primary-ghost);border-color:var(--primary-light)}
+.btn-trial i{width:16px;height:16px}
+/* Footer links */
+.activation-footer{margin-top:24px;font-size:13px;color:var(--text-secondary)}
+.activation-footer a{color:var(--primary-light);text-decoration:none;font-weight:500;transition:color var(--duration-fast)}
+.activation-footer a:hover{color:var(--primary);text-decoration:underline}
+/* License info */
+.license-info{margin-top:20px;padding:12px 16px;background:var(--bg-hover);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;gap:8px;font-size:12px;color:var(--text-secondary)}
+.license-info i{width:14px;height:14px}
+/* Error message */
+.error-msg{display:none;align-items:center;justify-content:center;gap:6px;font-size:13px;color:var(--error);margin-bottom:16px;animation:fadeIn 0.2s var(--ease-out)}
+.error-msg.visible{display:flex}
+.error-msg i{width:16px;height:16px}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+/* Success state */
+.success-state{display:none;text-align:center;animation:fadeIn 0.3s var(--ease-out)}
+.success-state.visible{display:block}
+.success-icon{width:72px;height:72px;background:var(--accent-ghost);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+.success-icon i{width:36px;height:36px;color:var(--accent)}
+.success-title{font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--text-primary);margin-bottom:8px}
+.success-desc{font-size:14px;color:var(--text-secondary);margin-bottom:24px}
+.btn-enter{display:inline-flex;align-items:center;gap:8px;padding:0 32px;height:44px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-lg);font-family:var(--font-zh);font-size:15px;font-weight:600;cursor:pointer;transition:all var(--duration-fast) var(--ease-out)}
+.btn-enter:hover{background:var(--accent-hover);transform:translateY(-1px)}
+.btn-enter i{width:18px;height:18px}
+/* Login state */
+.login-state{display:none}
+.login-state.visible{display:block}
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()"><i data-lucide="moon"></i><span>暗色模式</span></button>
+
+<div class="activation-card" id="activationCard">
+
+  <!-- Default: License Input -->
+  <div id="defaultState">
+    <div class="logo"><i data-lucide="languages"></i></div>
+    <h1 class="title">欢迎使用 英译中翻译工具</h1>
+    <p class="subtitle">请输入您的授权码以激活产品</p>
+
+    <div class="license-inputs">
+      <input type="text" class="license-input" maxlength="4" placeholder="XXXX" id="lic1" oninput="handleInput(this,'lic2')" onkeydown="handleKeydown(event,this,null)">
+      <span class="license-sep">&mdash;</span>
+      <input type="text" class="license-input" maxlength="4" placeholder="XXXX" id="lic2" oninput="handleInput(this,'lic3')" onkeydown="handleKeydown(event,this,'lic1')">
+      <span class="license-sep">&mdash;</span>
+      <input type="text" class="license-input" maxlength="4" placeholder="XXXX" id="lic3" oninput="handleInput(this,'lic4')" onkeydown="handleKeydown(event,this,'lic2')">
+      <span class="license-sep">&mdash;</span>
+      <input type="text" class="license-input" maxlength="4" placeholder="XXXX" id="lic4" oninput="handleInput(this,null)" onkeydown="handleKeydown(event,this,'lic3')">
+    </div>
+
+    <div class="error-msg" id="errorMsg">
+      <i data-lucide="alert-circle"></i>
+      <span id="errorText">授权码格式错误，请检查后重试</span>
+    </div>
+
+    <button class="btn-activate" id="activateBtn" onclick="activate()">
+      <i data-lucide="shield-check"></i> 激活产品
+    </button>
+
+    <div class="divider">或</div>
+
+    <button class="btn-trial" onclick="startTrial()">
+      <i data-lucide="play"></i> 免费试用（限 3 页/天）
+    </button>
+
+    <div class="activation-footer">
+      没有授权码？<a href="#">前往购买 &rarr;</a>
+    </div>
+
+    <div class="license-info">
+      <i data-lucide="shield-check"></i>
+      <span>授权状态：试用模式 · 未激活</span>
+    </div>
+  </div>
+
+  <!-- Success State -->
+  <div class="success-state" id="successState">
+    <div class="success-icon"><i data-lucide="check-circle-2"></i></div>
+    <h2 class="success-title">激活成功！</h2>
+    <p class="success-desc">专业版已激活，终身有效<br>欢迎使用 英译中翻译工具</p>
+    <button class="btn-enter" onclick="enterApp()">
+      <i data-lucide="arrow-right"></i> 开始使用
+    </button>
+  </div>
+
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');const b=document.querySelector('.theme-toggle');b.querySelector('span').textContent=d?'暗色模式':'亮色模式';b.querySelector('i').setAttribute('data-lucide',d?'moon':'sun');lucide.createIcons()}
+
+function handleInput(el,nextId){
+  el.value=el.value.toUpperCase().replace(/[^A-Z0-9]/g,'');
+  if(el.value.length===4&&nextId)document.getElementById(nextId).focus();
+  clearError();
+}
+
+function handleKeydown(e,el,prevId){
+  if(e.key==='Backspace'&&el.value.length===0&&prevId)document.getElementById(prevId).focus();
+  if(e.key==='Enter')activate();
+}
+
+function clearError(){
+  document.querySelectorAll('.license-input').forEach(i=>i.classList.remove('error'));
+  document.getElementById('errorMsg').classList.remove('visible');
+}
+
+function showError(msg){
+  document.querySelectorAll('.license-input').forEach(i=>i.classList.add('error'));
+  document.getElementById('errorText').textContent=msg;
+  document.getElementById('errorMsg').classList.add('visible');
+}
+
+function activate(){
+  const v1=document.getElementById('lic1').value;
+  const v2=document.getElementById('lic2').value;
+  const v3=document.getElementById('lic3').value;
+  const v4=document.getElementById('lic4').value;
+  if(v1.length!==4||v2.length!==4||v3.length!==4||v4.length!==4){
+    showError('请输入完整的 16 位授权码');
+    return;
+  }
+  const btn=document.getElementById('activateBtn');
+  btn.classList.add('loading');
+  btn.innerHTML='<span style="opacity:0">激活中...</span>';
+  setTimeout(()=>{
+    btn.classList.remove('loading');
+    // Simulate success
+    document.getElementById('defaultState').style.display='none';
+    document.getElementById('successState').classList.add('visible');
+    lucide.createIcons();
+  },2000);
+}
+
+function startTrial(){
+  document.getElementById('defaultState').style.display='none';
+  document.getElementById('successState').classList.add('visible');
+  document.getElementById('successState').querySelector('.success-title').textContent='试用模式已启动';
+  document.getElementById('successState').querySelector('.success-desc').innerHTML='每日可翻译 3 页文档<br>升级专业版解锁无限翻译';
+  lucide.createIcons();
+}
+
+function enterApp(){
+  // In real app, navigate to workspace
+  alert('即将进入工作台...');
+}
+
+lucide.createIcons();
+</script>
+</body>
+</html>

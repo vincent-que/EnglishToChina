@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>设置 — 英文转中文翻译工具</title>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary:#1E3A5F;--primary-hover:#16304F;--primary-light:#4A7AB5;--primary-lighter:#D6E4F0;--primary-ghost:rgba(30,58,95,0.06);
+  --accent:#2ECC71;--accent-hover:#27AE60;--accent-light:#D5F5E3;--accent-ghost:rgba(46,204,113,0.08);
+  --warning:#F39C12;--warning-light:#FEF3D5;--warning-ghost:rgba(243,156,18,0.08);
+  --error:#E74C3C;--error-light:#FDEDEC;--error-ghost:rgba(231,76,60,0.08);
+  --info:#3498DB;--info-light:#D6EAF8;
+  --bg-page:#F8F9FA;--bg-card:#FFFFFF;--bg-sidebar:#FFFFFF;--bg-hover:rgba(30,58,95,0.04);--bg-input:#FFFFFF;
+  --border:#E9ECEF;--border-hover:#CED4DA;--border-focus:var(--primary-light);
+  --text-primary:#2C3E50;--text-secondary:#6C757D;--text-tertiary:#ADB5BD;--text-on-primary:#FFFFFF;
+  --shadow-xs:0 1px 2px rgba(0,0,0,0.04);--shadow-sm:0 1px 3px rgba(0,0,0,0.08);
+  --shadow-focus:0 0 0 3px rgba(74,122,181,0.25);
+  --radius-sm:4px;--radius-md:6px;--radius-lg:8px;--radius-xl:12px;--radius-full:9999px;
+  --ease-out:cubic-bezier(0.4,0,0.2,1);--ease-spring:cubic-bezier(0.34,1.56,0.64,1);
+  --duration-fast:150ms;--duration-normal:250ms;--duration-slow:400ms;
+  --font-zh:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+  --font-en:"DM Sans",-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-mono:"JetBrains Mono","Consolas",monospace;
+  --font-display:"DM Sans",var(--font-zh);
+  --sidebar-width:220px;
+}
+[data-theme="dark"] {
+  --primary:#4A90D9;--primary-hover:#5A9FE8;--primary-light:#6BA3E0;--primary-lighter:#1E3A5F;--primary-ghost:rgba(74,144,217,0.1);
+  --accent:#2ECC71;--accent-hover:#3DDB80;--accent-light:#1A3A2A;--accent-ghost:rgba(46,204,113,0.1);
+  --warning:#F5B731;--warning-light:#3A3020;--warning-ghost:rgba(245,183,49,0.1);
+  --error:#FF6B6B;--error-light:#3A2020;--error-ghost:rgba(255,107,107,0.1);
+  --info:#5DADE2;--info-light:#1A2A3A;
+  --bg-page:#0F1117;--bg-card:#16213E;--bg-sidebar:#121929;--bg-hover:rgba(74,144,217,0.06);--bg-input:#1A2744;
+  --border:#2A2A4A;--border-hover:#3A3A5A;--border-focus:var(--primary);
+  --text-primary:#E8E8E8;--text-secondary:#A0A0B0;--text-tertiary:#6A6A7A;--text-on-primary:#FFFFFF;
+  --shadow-xs:0 1px 2px rgba(0,0,0,0.2);--shadow-sm:0 1px 3px rgba(0,0,0,0.3);
+  --shadow-focus:0 0 0 3px rgba(74,144,217,0.3);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font-zh);color:var(--text-primary);background:var(--bg-page);transition:background var(--duration-slow) var(--ease-out),color var(--duration-slow) var(--ease-out);height:100vh;overflow:hidden}
+.app-layout{display:flex;height:100vh}
+/* Sidebar */
+.sidebar{width:var(--sidebar-width);background:var(--bg-sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+.sidebar-header{padding:20px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)}
+.sidebar-logo{width:32px;height:32px;background:var(--primary);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center}
+.sidebar-logo i{width:18px;height:18px;color:#fff}
+.sidebar-brand-name{font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--text-primary)}
+.sidebar-brand-ver{font-size:11px;color:var(--text-tertiary);font-family:var(--font-mono)}
+.sidebar-nav{flex:1;padding:12px 8px}
+.sidebar-section-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-tertiary);padding:12px 12px 6px}
+.sidebar-section-label:first-child{padding-top:0}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--radius-md);font-size:13px;font-weight:450;color:var(--text-secondary);cursor:pointer;transition:all var(--duration-fast) var(--ease-out);position:relative}
+.nav-item i{width:18px;height:18px;flex-shrink:0}
+.nav-item:hover{background:var(--bg-hover);color:var(--text-primary)}
+.nav-item.active{background:var(--primary-ghost);color:var(--primary);font-weight:500}
+.nav-item.active::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:3px;background:var(--primary);border-radius:0 2px 2px 0}
+.sidebar-footer{padding:12px 16px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.sidebar-avatar{width:32px;height:32px;background:var(--primary-lighter);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--primary)}
+.sidebar-user-name{font-size:13px;font-weight:500;color:var(--text-primary)}
+.sidebar-user-plan{font-size:11px;color:var(--accent-hover);display:flex;align-items:center;gap:4px}
+.sidebar-user-plan i{width:12px;height:12px}
+/* Main */
+.main-content{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.top-bar{height:56px;padding:0 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:var(--bg-card);flex-shrink:0;transition:background var(--duration-slow) var(--ease-out)}
+.page-title{font-family:var(--font-display);font-size:16px;font-weight:600;color:var(--text-primary)}
+.top-bar-right{display:flex;align-items:center;gap:8px}
+.btn-icon-sm{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-md);background:transparent;border:none;cursor:pointer;color:var(--text-secondary);transition:all var(--duration-fast)}
+.btn-icon-sm:hover{background:var(--bg-hover);color:var(--text-primary)}
+.btn-icon-sm i{width:18px;height:18px}
+.theme-toggle-sm{display:flex;align-items:center;gap:6px;padding:5px 12px;background:var(--bg-hover);border:1px solid var(--border);border-radius:var(--radius-full);cursor:pointer;font-size:12px;font-weight:500;color:var(--text-secondary);transition:all var(--duration-fast)}
+.theme-toggle-sm:hover{border-color:var(--border-hover);color:var(--text-primary)}
+.theme-toggle-sm i{width:14px;height:14px}
+.content-area{flex:1;overflow-y:auto;padding:28px}
+/* Settings sections */
+.settings-sections{max-width:720px;display:flex;flex-direction:column;gap:20px}
+.settings-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:background var(--duration-slow) var(--ease-out),border-color var(--duration-slow) var(--ease-out)}
+.settings-card-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.settings-card-header i{width:18px;height:18px;color:var(--primary)}
+.settings-card-title{font-size:14px;font-weight:600;color:var(--text-primary)}
+.settings-card-body{padding:20px}
+/* Form elements */
+.form-row{display:flex;align-items:center;gap:16px;padding:12px 0;border-bottom:1px solid var(--border)}
+.form-row:last-child{border-bottom:none}
+.form-row-label{width:140px;font-size:13px;font-weight:500;color:var(--text-primary);flex-shrink:0}
+.form-row-value{flex:1;display:flex;align-items:center;gap:10px}
+.form-row-actions{flex-shrink:0}
+.input{height:36px;padding:0 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);font-family:var(--font-zh);font-size:13px;color:var(--text-primary);transition:all var(--duration-fast) var(--ease-out);outline:none;width:100%}
+.input::placeholder{color:var(--text-tertiary)}
+.input:hover{border-color:var(--border-hover)}
+.input:focus{border-color:var(--border-focus);box-shadow:var(--shadow-focus)}
+.input-password{position:relative;flex:1}
+.input-password .input{padding-right:40px}
+.input-password .toggle-pw{position:absolute;right:4px;top:50%;transform:translateY(-50%);background:none;border:none;padding:6px;cursor:pointer;color:var(--text-tertiary);border-radius:var(--radius-sm);transition:color var(--duration-fast)}
+.input-password .toggle-pw:hover{color:var(--text-secondary)}
+.input-password .toggle-pw i{width:16px;height:16px;display:block}
+.select{position:relative;flex:1}
+.select-trigger{height:36px;padding:0 36px 0 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);font-family:var(--font-zh);font-size:13px;color:var(--text-primary);cursor:pointer;display:flex;align-items:center;transition:all var(--duration-fast) var(--ease-out);width:100%;position:relative;user-select:none}
+.select-trigger:hover{border-color:var(--border-hover)}
+.select-trigger .chevron{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--text-tertiary);pointer-events:none}
+.select-trigger .chevron i{width:16px;height:16px;display:block}
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 16px;height:34px;border:1px solid transparent;border-radius:var(--radius-md);font-family:var(--font-zh);font-size:13px;font-weight:500;cursor:pointer;transition:all var(--duration-fast) var(--ease-out);white-space:nowrap}
+.btn i{width:16px;height:16px;flex-shrink:0}
+.btn-primary{background:var(--primary);color:var(--text-on-primary);border-color:var(--primary)}
+.btn-primary:hover{background:var(--primary-hover)}
+.btn-secondary{background:transparent;color:var(--primary);border-color:var(--border)}
+.btn-secondary:hover{background:var(--primary-ghost);border-color:var(--primary-light)}
+.btn-ghost{background:transparent;color:var(--text-secondary);border:none;padding:0 8px;height:auto;font-size:12px}
+.btn-ghost:hover{color:var(--primary)}
+.btn-sm{height:30px;padding:0 12px;font-size:12px}
+.btn-danger{background:transparent;color:var(--error);border:1px solid var(--border)}
+.btn-danger:hover{background:var(--error-ghost);border-color:var(--error)}
+/* Status badge */
+.status-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:var(--radius-full);font-size:11px;font-weight:600}
+.status-active{background:var(--accent-light);color:var(--accent-hover)}
+.status-active::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.status-warn{background:var(--warning-light);color:var(--warning)}
+/* License list */
+.license-list{display:flex;flex-direction:column;gap:8px}
+.license-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-md)}
+.license-icon{width:32px;height:32px;background:var(--primary-ghost);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.license-icon i{width:16px;height:16px;color:var(--primary)}
+.license-info{flex:1}
+.license-name{font-size:13px;font-weight:500;color:var(--text-primary)}
+.license-meta{font-size:11px;color:var(--text-tertiary)}
+.license-current{font-size:11px;color:var(--accent);font-weight:600}
+/* Font list */
+.font-list{display:flex;flex-direction:column;gap:8px}
+.font-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-md)}
+.font-preview{font-size:18px;color:var(--text-primary);flex:1}
+.font-name{font-size:12px;color:var(--text-secondary);flex-shrink:0;width:120px}
+.font-source{font-size:11px;color:var(--text-tertiary);flex-shrink:0;width:60px}
+.font-check{color:var(--accent);flex-shrink:0}
+.font-check i{width:16px;height:16px}
+/* About */
+.about-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0}
+.about-label{font-size:13px;color:var(--text-secondary)}
+.about-value{font-size:13px;font-weight:500;color:var(--text-primary);font-family:var(--font-mono)}
+.about-links{display:flex;gap:8px;margin-top:16px}
+@media(max-width:900px){.sidebar{width:64px}.sidebar-brand,.sidebar-section-label,.nav-item span,.sidebar-user,.sidebar-brand-ver{display:none}.nav-item{justify-content:center;padding:10px}.sidebar-header{justify-content:center;padding:16px}.sidebar-footer{justify-content:center}.form-row{flex-direction:column;align-items:flex-start;gap:8px}.form-row-label{width:auto}}
+</style>
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-header"><div class="sidebar-logo"><i data-lucide="languages"></i></div><div class="sidebar-brand"><span class="sidebar-brand-name">英译中翻译工具</span><span class="sidebar-brand-ver">v1.0.0</span></div></div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">主要功能</div>
+      <div class="nav-item"><i data-lucide="layout-dashboard"></i><span>工作台</span></div>
+      <div class="nav-item"><i data-lucide="history"></i><span>翻译记录</span></div>
+      <div class="nav-item"><i data-lucide="book-open"></i><span>术语表</span></div>
+      <div class="sidebar-section-label">系统</div>
+      <div class="nav-item active"><i data-lucide="settings"></i><span>设置</span></div>
+      <div class="nav-item"><i data-lucide="user-circle"></i><span>账户信息</span></div>
+      <div class="nav-item"><i data-lucide="life-buoy"></i><span>帮助与反馈</span></div>
+    </nav>
+    <div class="sidebar-footer"><div class="sidebar-avatar">Li</div><div class="sidebar-user"><div class="sidebar-user-name">Li Wei</div><div class="sidebar-user-plan"><i data-lucide="crown"></i> 专业版</div></div></div>
+  </aside>
+
+  <main class="main-content">
+    <header class="top-bar">
+      <h1 class="page-title">设置</h1>
+      <div class="top-bar-right">
+        <button class="theme-toggle-sm" onclick="toggleTheme()"><i data-lucide="moon"></i><span>暗色</span></button>
+      </div>
+    </header>
+
+    <div class="content-area">
+      <div class="settings-sections">
+
+        <!-- Account -->
+        <div class="settings-card">
+          <div class="settings-card-header"><i data-lucide="user-circle"></i><span class="settings-card-title">账户信息</span></div>
+          <div class="settings-card-body">
+            <div class="form-row">
+              <span class="form-row-label">授权状态</span>
+              <div class="form-row-value"><span class="status-badge status-active">专业版 已激活</span></div>
+            </div>
+            <div class="form-row">
+              <span class="form-row-label">授权方案</span>
+              <div class="form-row-value">
+                <span style="font-size:13px;color:var(--text-primary)">专业版</span>
+              </div>
+              <div class="form-row-actions"><button class="btn btn-secondary btn-sm">管理授权</button></div>
+            </div>
+            <div class="form-row">
+              <span class="form-row-label">有效期</span>
+              <div class="form-row-value"><span style="font-size:13px;color:var(--accent);font-weight:500">终身有效</span></div>
+            </div>
+
+            <div style="margin-top:16px">
+              <div style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px">授权记录</div>
+              <div class="license-list">
+                <div class="license-item">
+                  <div class="license-icon"><i data-lucide="shield-check"></i></div>
+                  <div class="license-info">
+                    <div class="license-name">专业版授权</div>
+                    <div class="license-meta">激活于 2026-05-17</div>
+                  </div>
+                  <span class="license-current">当前授权</span>
+                </div>
+              </div>
+              <button class="btn btn-ghost" style="margin-top:8px"><i data-lucide="refresh-cw" style="width:14px;height:14px"></i> 刷新授权</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- API Config -->
+        <div class="settings-card">
+          <div class="settings-card-header"><i data-lucide="key-round"></i><span class="settings-card-title">API 配置</span></div>
+          <div class="settings-card-body">
+            <div class="form-row">
+              <span class="form-row-label">默认模型</span>
+              <div class="form-row-value">
+                <div class="select"><div class="select-trigger"><span>DeepSeek</span><span class="chevron"><i data-lucide="chevron-down"></i></span></div></div>
+              </div>
+            </div>
+            <div class="form-row">
+              <span class="form-row-label">API Key</span>
+              <div class="form-row-value">
+                <div class="input-password">
+                  <input type="password" class="input" value="sk-abc123456789xyz" readonly>
+                  <button class="toggle-pw" onclick="this.previousElementSibling.type=this.previousElementSibling.type==='password'?'text':'password'"><i data-lucide="eye"></i></button>
+                </div>
+              </div>
+              <div class="form-row-actions"><button class="btn btn-secondary btn-sm"><i data-lucide="zap"></i> 测试</button></div>
+            </div>
+            <div class="form-row">
+              <span class="form-row-label">产品额度</span>
+              <div class="form-row-value">
+                <span style="font-size:13px;font-family:var(--font-mono);font-weight:600;color:var(--text-primary)">$12.50</span>
+                <span style="font-size:12px;color:var(--text-tertiary)">剩余可用</span>
+              </div>
+              <div class="form-row-actions"><button class="btn btn-secondary btn-sm">充值</button></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Default Preferences -->
+        <div class="settings-card">
+          <div class="settings-card-header"><i data-lucide="sliders-horizontal"></i><span class="settings-card-title">默认翻译偏好</span></div>
+          <div class="settings-card-body">
+            <div class="form-row">
+              <span class="form-row-label">默认翻译风格</span>
+              <div class="form-row-value">
+                <div class="select"><div class="select-trigger"><span>商务通用</span><span class="chevron"><i data-lucide="chevron-down"></i></span></div></div>
+              </div>
+            </div>
+            <div class="form-row">
+              <span class="form-row-label">默认输出格式</span>
+              <div class="form-row-value">
+                <div class="select"><div class="select-trigger"><span>Word (.docx)</span><span class="chevron"><i data-lucide="chevron-down"></i></span></div></div>
+              </div>
+            </div>
+            <div class="form-row">
+              <span class="form-row-label">默认术语表</span>
+              <div class="form-row-value">
+                <div class="select"><div class="select-trigger"><span>计算机术语表</span><span class="chevron"><i data-lucide="chevron-down"></i></span></div></div>
+              </div>
+            </div>
+            <div class="form-row">
+              <span class="form-row-label">翻译完成通知</span>
+              <div class="form-row-value">
+                <div class="toggle active" onclick="this.classList.toggle('active')"><span class="toggle-track"><span class="toggle-thumb"></span></span><span style="font-size:13px">启用系统通知</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Font Management -->
+        <div class="settings-card">
+          <div class="settings-card-header"><i data-lucide="type"></i><span class="settings-card-title">中文字体管理</span></div>
+          <div class="settings-card-body">
+            <div class="font-list">
+              <div class="font-item">
+                <div class="font-preview" style="font-family:'Noto Sans SC',sans-serif">中文 English 123</div>
+                <div class="font-name">Noto Sans SC</div>
+                <div class="font-source">内置</div>
+                <div class="font-check"><i data-lucide="check-circle-2"></i></div>
+              </div>
+              <div class="font-item">
+                <div class="font-preview" style="font-family:'Microsoft YaHei',sans-serif">中文 English 123</div>
+                <div class="font-name">微软雅黑</div>
+                <div class="font-source">系统</div>
+                <div class="font-check"><i data-lucide="check-circle-2"></i></div>
+              </div>
+              <div class="font-item">
+                <div class="font-preview" style="font-family:'SimSun',serif">中文 English 123</div>
+                <div class="font-name">宋体</div>
+                <div class="font-source">系统</div>
+                <div class="font-check"><i data-lucide="check-circle-2"></i></div>
+              </div>
+            </div>
+            <button class="btn btn-secondary btn-sm" style="margin-top:14px"><i data-lucide="upload"></i> 安装自定义字体</button>
+          </div>
+        </div>
+
+        <!-- About -->
+        <div class="settings-card">
+          <div class="settings-card-header"><i data-lucide="info"></i><span class="settings-card-title">关于</span></div>
+          <div class="settings-card-body">
+            <div class="about-row"><span class="about-label">产品名称</span><span class="about-value" style="font-family:var(--font-zh)">英译中翻译工具</span></div>
+            <div class="about-row"><span class="about-label">版本号</span><span class="about-value">v1.0.0</span></div>
+            <div class="about-row"><span class="about-label">内核版本</span><span class="about-value">Electron 28.0</span></div>
+            <div class="about-row"><span class="about-label">操作系统</span><span class="about-value">Windows 11 Pro</span></div>
+            <div class="about-links">
+              <button class="btn btn-secondary btn-sm"><i data-lucide="refresh-cw"></i> 检查更新</button>
+              <button class="btn btn-ghost"><i data-lucide="book-open" style="width:14px;height:14px"></i> 用户手册</button>
+              <button class="btn btn-ghost"><i data-lucide="message-square" style="width:14px;height:14px"></i> 反馈问题</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+
+<style>
+.toggle{display:inline-flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.toggle-track{width:40px;height:22px;background:var(--border-hover);border-radius:11px;position:relative;transition:background var(--duration-fast) var(--ease-out);flex-shrink:0}
+.toggle-thumb{width:18px;height:18px;background:#fff;border-radius:50%;position:absolute;top:2px;left:2px;transition:transform var(--duration-fast) var(--ease-spring);box-shadow:0 1px 3px rgba(0,0,0,0.15)}
+.toggle.active .toggle-track{background:var(--primary)}
+.toggle.active .toggle-thumb{transform:translateX(18px)}
+</style>
+
+<script>
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');const b=document.querySelector('.theme-toggle-sm');b.querySelector('span').textContent=d?'暗色':'亮色';b.querySelector('i').setAttribute('data-lucide',d?'moon':'sun');lucide.createIcons()}
+lucide.createIcons();
+</script>
+</body>
+</html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>翻译结果预览 — 英文转中文翻译工具</title>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary:#1E3A5F;--primary-hover:#16304F;--primary-light:#4A7AB5;--primary-lighter:#D6E4F0;--primary-ghost:rgba(30,58,95,0.06);
+  --accent:#2ECC71;--accent-hover:#27AE60;--accent-light:#D5F5E3;--accent-ghost:rgba(46,204,113,0.08);
+  --warning:#F39C12;--warning-light:#FEF3D5;--warning-ghost:rgba(243,156,18,0.08);
+  --error:#E74C3C;--error-light:#FDEDEC;--error-ghost:rgba(231,76,60,0.08);
+  --info:#3498DB;--info-light:#D6EAF8;
+  --bg-page:#F8F9FA;--bg-card:#FFFFFF;--bg-sidebar:#FFFFFF;--bg-hover:rgba(30,58,95,0.04);--bg-input:#FFFFFF;
+  --border:#E9ECEF;--border-hover:#CED4DA;--border-focus:var(--primary-light);
+  --text-primary:#2C3E50;--text-secondary:#6C757D;--text-tertiary:#ADB5BD;--text-on-primary:#FFFFFF;
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.08);--shadow-md:0 4px 12px rgba(0,0,0,0.10);--shadow-lg:0 8px 24px rgba(0,0,0,0.14);
+  --shadow-focus:0 0 0 3px rgba(74,122,181,0.25);
+  --radius-sm:4px;--radius-md:6px;--radius-lg:8px;--radius-xl:12px;--radius-full:9999px;
+  --ease-out:cubic-bezier(0.4,0,0.2,1);--ease-spring:cubic-bezier(0.34,1.56,0.64,1);
+  --duration-fast:150ms;--duration-normal:250ms;--duration-slow:400ms;
+  --font-zh:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+  --font-serif:"Noto Serif SC","Source Han Serif SC","SimSun",serif;
+  --font-en:"DM Sans",-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-mono:"JetBrains Mono","Consolas",monospace;
+  --font-display:"DM Sans",var(--font-zh);
+  --sidebar-width:220px;
+}
+[data-theme="dark"] {
+  --primary:#4A90D9;--primary-hover:#5A9FE8;--primary-light:#6BA3E0;--primary-lighter:#1E3A5F;--primary-ghost:rgba(74,144,217,0.1);
+  --accent:#2ECC71;--accent-hover:#3DDB80;--accent-light:#1A3A2A;--accent-ghost:rgba(46,204,113,0.1);
+  --warning:#F5B731;--warning-light:#3A3020;--warning-ghost:rgba(245,183,49,0.1);
+  --error:#FF6B6B;--error-light:#3A2020;--error-ghost:rgba(255,107,107,0.1);
+  --info:#5DADE2;--info-light:#1A2A3A;
+  --bg-page:#0F1117;--bg-card:#16213E;--bg-sidebar:#121929;--bg-hover:rgba(74,144,217,0.06);--bg-input:#1A2744;
+  --border:#2A2A4A;--border-hover:#3A3A5A;--border-focus:var(--primary);
+  --text-primary:#E8E8E8;--text-secondary:#A0A0B0;--text-tertiary:#6A6A7A;--text-on-primary:#FFFFFF;
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.3);--shadow-md:0 4px 12px rgba(0,0,0,0.35);--shadow-lg:0 8px 24px rgba(0,0,0,0.4);
+  --shadow-focus:0 0 0 3px rgba(74,144,217,0.3);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font-zh);color:var(--text-primary);background:var(--bg-page);transition:background var(--duration-slow) var(--ease-out),color var(--duration-slow) var(--ease-out);height:100vh;overflow:hidden}
+.app-layout{display:flex;height:100vh}
+/* Sidebar */
+.sidebar{width:var(--sidebar-width);background:var(--bg-sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+.sidebar-header{padding:20px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)}
+.sidebar-logo{width:32px;height:32px;background:var(--primary);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center}
+.sidebar-logo i{width:18px;height:18px;color:#fff}
+.sidebar-brand-name{font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--text-primary)}
+.sidebar-brand-ver{font-size:11px;color:var(--text-tertiary);font-family:var(--font-mono)}
+.sidebar-nav{flex:1;padding:12px 8px}
+.sidebar-section-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-tertiary);padding:12px 12px 6px}
+.sidebar-section-label:first-child{padding-top:0}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--radius-md);font-size:13px;font-weight:450;color:var(--text-secondary);cursor:pointer;transition:all var(--duration-fast) var(--ease-out);position:relative}
+.nav-item i{width:18px;height:18px;flex-shrink:0}
+.nav-item:hover{background:var(--bg-hover);color:var(--text-primary)}
+.nav-item.active{background:var(--primary-ghost);color:var(--primary);font-weight:500}
+.nav-item.active::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:3px;background:var(--primary);border-radius:0 2px 2px 0}
+.sidebar-footer{padding:12px 16px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.sidebar-avatar{width:32px;height:32px;background:var(--primary-lighter);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--primary)}
+.sidebar-user-name{font-size:13px;font-weight:500;color:var(--text-primary)}
+.sidebar-user-plan{font-size:11px;color:var(--accent-hover);display:flex;align-items:center;gap:4px}
+.sidebar-user-plan i{width:12px;height:12px}
+/* Main */
+.main-content{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.top-bar{height:56px;padding:0 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:var(--bg-card);flex-shrink:0;transition:background var(--duration-slow) var(--ease-out)}
+.top-bar-left{display:flex;align-items:center;gap:12px}
+.page-title{font-family:var(--font-display);font-size:16px;font-weight:600;color:var(--text-primary)}
+.file-tag{display:flex;align-items:center;gap:6px;padding:3px 10px;background:var(--primary-ghost);color:var(--primary);border-radius:var(--radius-full);font-size:11px;font-weight:600;font-family:var(--font-mono)}
+.file-tag i{width:12px;height:12px}
+.top-bar-center{display:flex;align-items:center;gap:4px}
+.top-bar-right{display:flex;align-items:center;gap:8px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 16px;height:34px;border:1px solid transparent;border-radius:var(--radius-md);font-family:var(--font-zh);font-size:13px;font-weight:500;cursor:pointer;transition:all var(--duration-fast) var(--ease-out);white-space:nowrap}
+.btn i{width:16px;height:16px;flex-shrink:0}
+.btn-primary{background:var(--primary);color:var(--text-on-primary);border-color:var(--primary)}
+.btn-primary:hover{background:var(--primary-hover)}
+.btn-secondary{background:transparent;color:var(--primary);border-color:var(--border)}
+.btn-secondary:hover{background:var(--primary-ghost);border-color:var(--primary-light)}
+.btn-ghost{background:transparent;color:var(--text-secondary);border:none;padding:0 10px}
+.btn-ghost:hover{color:var(--text-primary);background:var(--bg-hover)}
+.btn-sm{height:30px;padding:0 12px;font-size:12px}
+.btn-icon-sm{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-md);background:transparent;border:none;cursor:pointer;color:var(--text-secondary);transition:all var(--duration-fast)}
+.btn-icon-sm:hover{background:var(--bg-hover);color:var(--text-primary)}
+.btn-icon-sm i{width:18px;height:18px}
+.theme-toggle-sm{display:flex;align-items:center;gap:6px;padding:5px 12px;background:var(--bg-hover);border:1px solid var(--border);border-radius:var(--radius-full);cursor:pointer;font-size:12px;font-weight:500;color:var(--text-secondary);transition:all var(--duration-fast)}
+.theme-toggle-sm:hover{border-color:var(--border-hover);color:var(--text-primary)}
+.theme-toggle-sm i{width:14px;height:14px}
+.divider-v{width:1px;height:24px;background:var(--border)}
+/* Content */
+.content-area{flex:1;display:flex;overflow:hidden}
+/* Preview panels */
+.preview-container{flex:1;display:flex;overflow:hidden}
+.preview-panel{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.preview-panel+.preview-panel{border-left:1px solid var(--border)}
+.panel-header{padding:12px 20px;border-bottom:1px solid var(--border);background:var(--bg-card);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;transition:background var(--duration-slow) var(--ease-out)}
+.panel-title{font-size:13px;font-weight:600;color:var(--text-primary);display:flex;align-items:center;gap:8px}
+.panel-title .lang-badge{padding:2px 8px;border-radius:var(--radius-full);font-size:11px;font-weight:600;font-family:var(--font-mono)}
+.lang-en{background:var(--info-light);color:var(--info)}
+.lang-zh{background:var(--accent-ghost);color:var(--accent)}
+.panel-body{flex:1;overflow-y:auto;padding:28px 32px;background:var(--bg-page);transition:background var(--duration-slow) var(--ease-out)}
+/* Document content styling */
+.doc-content{max-width:640px;margin:0 auto}
+.doc-content h1{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--text-primary);margin-bottom:6px;line-height:1.3}
+.doc-content h2{font-family:var(--font-display);font-size:17px;font-weight:600;color:var(--text-primary);margin-top:28px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.doc-content h3{font-size:15px;font-weight:600;color:var(--text-primary);margin-top:20px;margin-bottom:8px}
+.doc-content p{font-size:14px;line-height:1.8;color:var(--text-primary);margin-bottom:12px;text-align:justify}
+.doc-content .doc-meta{font-size:12px;color:var(--text-tertiary);margin-bottom:24px;display:flex;gap:12px;flex-wrap:wrap}
+.doc-content .highlight{background:var(--warning-light);padding:2px 4px;border-radius:2px}
+/* Table in doc */
+.doc-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+.doc-table th{background:var(--bg-hover);font-weight:600;text-align:left;padding:10px 12px;border:1px solid var(--border);color:var(--text-primary)}
+.doc-table td{padding:10px 12px;border:1px solid var(--border);color:var(--text-primary)}
+.doc-table tr:hover td{background:var(--bg-hover)}
+/* Segments highlight */
+.segment{padding:4px 0;border-radius:4px;transition:background var(--duration-fast);cursor:pointer;position:relative}
+.segment:hover{background:var(--primary-ghost)}
+.segment.active{background:rgba(74,122,181,0.1);outline:2px solid var(--primary-light);outline-offset:2px;border-radius:4px}
+.segment-num{position:absolute;left:-28px;top:4px;font-size:10px;color:var(--text-tertiary);font-family:var(--font-mono);opacity:0;transition:opacity var(--duration-fast)}
+.doc-content:hover .segment-num{opacity:1}
+/* Resizer */
+.resize-handle{width:6px;background:var(--border);cursor:col-resize;transition:background var(--duration-fast);flex-shrink:0;position:relative}
+.resize-handle:hover{background:var(--primary-light)}
+.resize-handle::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:2px;height:32px;background:var(--text-tertiary);border-radius:1px;opacity:0;transition:opacity var(--duration-fast)}
+.resize-handle:hover::after{opacity:1}
+/* Bottom bar */
+.bottom-bar{padding:12px 28px;border-top:1px solid var(--border);background:var(--bg-card);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;transition:background var(--duration-slow) var(--ease-out)}
+.quality-score{display:flex;align-items:center;gap:16px}
+.score-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-secondary)}
+.score-bar{width:60px;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.score-fill{height:100%;border-radius:2px}
+.score-fill-good{background:var(--accent)}
+.score-fill-ok{background:var(--warning)}
+.score-fill-bad{background:var(--error)}
+.score-total{font-family:var(--font-mono);font-size:18px;font-weight:700;color:var(--primary);display:flex;align-items:baseline;gap:2px}
+.score-total small{font-size:12px;font-weight:400;color:var(--text-tertiary)}
+.retranslate-bar{display:flex;align-items:center;gap:8px}
+@media(max-width:900px){.sidebar{width:64px}.sidebar-brand,.sidebar-section-label,.nav-item span,.sidebar-user,.sidebar-brand-ver{display:none}.nav-item{justify-content:center;padding:10px}.sidebar-header{justify-content:center;padding:16px}.sidebar-footer{justify-content:center}.preview-container{flex-direction:column}.preview-panel+.preview-panel{border-left:none;border-top:1px solid var(--border)}.resize-handle{display:none}}
+</style>
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-header"><div class="sidebar-logo"><i data-lucide="languages"></i></div><div class="sidebar-brand"><span class="sidebar-brand-name">英译中翻译工具</span><span class="sidebar-brand-ver">v1.0.0</span></div></div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">主要功能</div>
+      <div class="nav-item"><i data-lucide="layout-dashboard"></i><span>工作台</span></div>
+      <div class="nav-item active"><i data-lucide="history"></i><span>翻译记录</span></div>
+      <div class="nav-item"><i data-lucide="book-open"></i><span>术语表</span></div>
+      <div class="sidebar-section-label">系统</div>
+      <div class="nav-item"><i data-lucide="settings"></i><span>翻译设置</span></div>
+      <div class="nav-item"><i data-lucide="user-circle"></i><span>账户信息</span></div>
+    </nav>
+    <div class="sidebar-footer"><div class="sidebar-avatar">Li</div><div class="sidebar-user"><div class="sidebar-user-name">Li Wei</div><div class="sidebar-user-plan"><i data-lucide="crown"></i> 专业版</div></div></div>
+  </aside>
+
+  <main class="main-content">
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <h1 class="page-title">翻译结果预览</h1>
+        <span class="file-tag"><i data-lucide="file-text"></i> Annual_Report_2024.pdf</span>
+      </div>
+      <div class="top-bar-right">
+        <button class="theme-toggle-sm" onclick="toggleTheme()"><i data-lucide="moon"></i><span>暗色</span></button>
+        <span class="divider-v"></span>
+        <button class="btn btn-secondary btn-sm"><i data-lucide="download"></i> 导出 PDF</button>
+        <button class="btn btn-primary btn-sm"><i data-lucide="file-text"></i> 导出 Word</button>
+        <button class="btn btn-ghost btn-sm"><i data-lucide="copy"></i> 复制全文</button>
+      </div>
+    </header>
+
+    <div class="content-area">
+      <div class="preview-container">
+        <!-- English Original -->
+        <div class="preview-panel" id="panelEn">
+          <div class="panel-header">
+            <span class="panel-title"><span class="lang-badge lang-en">EN</span> 原文</span>
+            <span style="font-size:12px;color:var(--text-tertiary)">50 页 &middot; 2.4 MB</span>
+          </div>
+          <div class="panel-body">
+            <div class="doc-content">
+              <h1>Annual Report 2024</h1>
+              <div class="doc-meta"><span>GAMAK Industries</span><span>Fiscal Year 2024</span><span>Published: January 2025</span></div>
+
+              <div class="segment active">
+                <span class="segment-num">[1]</span>
+                <h2>Chapter 1: Executive Summary</h2>
+                <p>This document presents the annual financial and operational performance of GAMAK Industries for the fiscal year ending December 31, 2024. The company achieved record revenue growth driven by expansion into emerging markets and the successful launch of three new product lines.</p>
+              </div>
+
+              <div class="segment">
+                <span class="segment-num">[2]</span>
+                <h2>Chapter 2: Financial Overview</h2>
+                <p>Total revenue for FY2024 reached $2.84 billion, representing a 15.3% increase from the prior year. Operating margins improved to 18.7%, up from 16.2% in FY2023, reflecting successful cost optimization initiatives and improved operational efficiency across manufacturing facilities.</p>
+              </div>
+
+              <div class="segment">
+                <span class="segment-num">[3]</span>
+                <h3>Table 1: Revenue by Segment (in millions USD)</h3>
+                <table class="doc-table">
+                  <thead>
+                    <tr><th>Business Segment</th><th>FY2024</th><th>FY2023</th><th>YoY Growth</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Industrial Automation</td><td>$1,240</td><td>$1,050</td><td>+18.1%</td></tr>
+                    <tr><td>Power Systems</td><td>$890</td><td>$780</td><td>+14.1%</td></tr>
+                    <tr><td>Digital Solutions</td><td>$420</td><td>$320</td><td>+31.3%</td></tr>
+                    <tr><td>Aftermarket Services</td><td>$290</td><td>$250</td><td>+16.0%</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="segment">
+                <span class="segment-num">[4]</span>
+                <h3>Key Financial Metrics</h3>
+                <p>Net income attributable to shareholders was $387 million, a 22.4% increase year-over-year. Earnings per share (EPS) rose to $4.52 from $3.69. The Board of Directors has declared a quarterly dividend of $0.35 per share, payable on March 15, 2025.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resize Handle -->
+        <div class="resize-handle" id="resizeHandle"></div>
+
+        <!-- Chinese Translation -->
+        <div class="preview-panel" id="panelZh">
+          <div class="panel-header">
+            <span class="panel-title"><span class="lang-badge lang-zh">ZH</span> 译文</span>
+            <span style="font-size:12px;color:var(--text-tertiary)">翻译质量 85/100</span>
+          </div>
+          <div class="panel-body">
+            <div class="doc-content">
+              <h1>2024 年度报告</h1>
+              <div class="doc-meta"><span>GAMAK 工业集团</span><span>2024 财年</span><span>发布日期：2025 年 1 月</span></div>
+
+              <div class="segment active">
+                <span class="segment-num">[1]</span>
+                <h2>第一章 执行摘要</h2>
+                <p>本文档呈现了 GAMAK 工业集团截至 2024 年 12 月 31 日财年的财务与运营表现。公司实现了创纪录的收入增长，这得益于向新兴市场的拓展以及三条新产品线的成功推出。</p>
+              </div>
+
+              <div class="segment">
+                <span class="segment-num">[2]</span>
+                <h2>第二章 财务概览</h2>
+                <p>2024 财年总收入达到 28.4 亿美元，较上年增长 15.3%。营业利润率提升至 18.7%，高于 2023 财年的 16.2%，反映出成本优化举措的成功以及各制造工厂运营效率的提升。</p>
+              </div>
+
+              <div class="segment">
+                <span class="segment-num">[3]</span>
+                <h3>表 1：各业务板块收入（百万美元）</h3>
+                <table class="doc-table">
+                  <thead>
+                    <tr><th>业务板块</th><th>2024 财年</th><th>2023 财年</th><th>同比增长</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>工业自动化</td><td>12.40</td><td>10.50</td><td>+18.1%</td></tr>
+                    <tr><td>电力系统</td><td>8.90</td><td>7.80</td><td>+14.1%</td></tr>
+                    <tr><td>数字化解决方案</td><td>4.20</td><td>3.20</td><td>+31.3%</td></tr>
+                    <tr><td>售后服务</td><td>2.90</td><td>2.50</td><td>+16.0%</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="segment">
+                <span class="segment-num">[4]</span>
+                <h3>关键财务指标</h3>
+                <p>归属于股东的净利润为 3.87 亿美元，同比增长 22.4%。每股收益（EPS）从 3.69 美元上升至 4.52 美元。董事会已宣布每股 0.35 美元的季度股息，将于 2025 年 3 月 15 日支付。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <footer class="bottom-bar">
+      <div class="quality-score">
+        <div class="score-total">85<small>/100</small></div>
+        <div class="score-item"><span>准确性</span><div class="score-bar"><div class="score-fill score-fill-good" style="width:88%"></div></div><span>88</span></div>
+        <div class="score-item"><span>流畅性</span><div class="score-bar"><div class="score-fill score-fill-good" style="width:82%"></div></div><span>82</span></div>
+        <div class="score-item"><span>术语一致性</span><div class="score-bar"><div class="score-fill score-fill-ok" style="width:78%"></div></div><span>78</span></div>
+        <div class="score-item"><span>格式完整</span><div class="score-bar"><div class="score-fill score-fill-good" style="width:92%"></div></div><span>92</span></div>
+      </div>
+      <div class="retranslate-bar">
+        <button class="btn btn-ghost btn-sm"><i data-lucide="chevron-left"></i> 上一段</button>
+        <button class="btn btn-secondary btn-sm"><i data-lucide="refresh-cw"></i> 重新翻译本段</button>
+        <button class="btn btn-ghost btn-sm">下一段 <i data-lucide="chevron-right"></i></button>
+      </div>
+    </footer>
+  </main>
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');const b=document.querySelector('.theme-toggle-sm');b.querySelector('span').textContent=d?'暗色':'亮色';b.querySelector('i').setAttribute('data-lucide',d?'moon':'sun');lucide.createIcons()}
+// Segment click highlighting
+document.querySelectorAll('.segment').forEach(seg=>{
+  seg.addEventListener('click',()=>{
+    document.querySelectorAll('.segment').forEach(s=>s.classList.remove('active'));
+    seg.classList.add('active');
+    const num=seg.querySelector('.segment-num').textContent;
+    document.querySelectorAll('.segment').forEach(s=>{
+      if(s.querySelector('.segment-num').textContent===num)s.classList.add('active');
+    });
+  });
+});
+// Sync scroll
+const panelEn=document.querySelector('#panelEn .panel-body');
+const panelZh=document.querySelector('#panelZh .panel-body');
+let syncing=false;
+panelEn.addEventListener('scroll',()=>{if(syncing)return;syncing=true;panelZh.scrollTop=panelEn.scrollTop;syncing=false});
+panelZh.addEventListener('scroll',()=>{if(syncing)return;syncing=true;panelEn.scrollTop=panelZh.scrollTop;syncing=false});
+// Resizer
+const handle=document.getElementById('resizeHandle');
+const container=document.querySelector('.preview-container');
+let isResizing=false;
+handle.addEventListener('mousedown',e=>{isResizing=true;document.body.style.cursor='col-resize';document.body.style.userSelect='none'});
+document.addEventListener('mousemove',e=>{
+  if(!isResizing)return;
+  const rect=container.getBoundingClientRect();
+  const pct=((e.clientX-rect.left)/rect.width)*100;
+  if(pct>20&&pct<80){
+    document.getElementById('panelEn').style.flex=`0 0 ${pct}%`;
+    document.getElementById('panelZh').style.flex=`0 0 ${100-pct}%`;
+  }
+});
+document.addEventListener('mouseup',()=>{isResizing=false;document.body.style.cursor='';document.body.style.userSelect=''});
+lucide.createIcons();
+</script>
+</body>
+</html>

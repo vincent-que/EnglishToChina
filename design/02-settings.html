@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>翻译设置 — 英文转中文翻译工具</title>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary:#1E3A5F;--primary-hover:#16304F;--primary-light:#4A7AB5;--primary-lighter:#D6E4F0;--primary-ghost:rgba(30,58,95,0.06);
+  --accent:#2ECC71;--accent-hover:#27AE60;--accent-light:#D5F5E3;--accent-ghost:rgba(46,204,113,0.08);
+  --warning:#F39C12;--warning-light:#FEF3D5;--warning-ghost:rgba(243,156,18,0.08);
+  --error:#E74C3C;--error-light:#FDEDEC;--error-ghost:rgba(231,76,60,0.08);
+  --info:#3498DB;--info-light:#D6EAF8;
+  --bg-page:#F8F9FA;--bg-card:#FFFFFF;--bg-sidebar:#FFFFFF;--bg-hover:rgba(30,58,95,0.04);
+  --bg-input:#FFFFFF;
+  --border:#E9ECEF;--border-hover:#CED4DA;--border-focus:var(--primary-light);--border-error:var(--error);
+  --text-primary:#2C3E50;--text-secondary:#6C757D;--text-tertiary:#ADB5BD;--text-on-primary:#FFFFFF;
+  --shadow-xs:0 1px 2px rgba(0,0,0,0.04);--shadow-sm:0 1px 3px rgba(0,0,0,0.08);--shadow-md:0 4px 12px rgba(0,0,0,0.10);--shadow-lg:0 8px 24px rgba(0,0,0,0.14);
+  --shadow-focus:0 0 0 3px rgba(74,122,181,0.25);
+  --radius-xs:3px;--radius-sm:4px;--radius-md:6px;--radius-lg:8px;--radius-xl:12px;--radius-full:9999px;
+  --ease-out:cubic-bezier(0.4,0,0.2,1);--ease-spring:cubic-bezier(0.34,1.56,0.64,1);
+  --duration-fast:150ms;--duration-normal:250ms;--duration-slow:400ms;
+  --font-zh:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+  --font-en:"DM Sans",-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-mono:"JetBrains Mono","Consolas",monospace;
+  --font-display:"DM Sans",var(--font-zh);
+  --sidebar-width:220px;
+}
+[data-theme="dark"] {
+  --primary:#4A90D9;--primary-hover:#5A9FE8;--primary-light:#6BA3E0;--primary-lighter:#1E3A5F;--primary-ghost:rgba(74,144,217,0.1);
+  --accent:#2ECC71;--accent-hover:#3DDB80;--accent-light:#1A3A2A;--accent-ghost:rgba(46,204,113,0.1);
+  --warning:#F5B731;--warning-light:#3A3020;--warning-ghost:rgba(245,183,49,0.1);
+  --error:#FF6B6B;--error-light:#3A2020;--error-ghost:rgba(255,107,107,0.1);
+  --info:#5DADE2;--info-light:#1A2A3A;
+  --bg-page:#0F1117;--bg-card:#16213E;--bg-sidebar:#121929;--bg-hover:rgba(74,144,217,0.06);
+  --bg-input:#1A2744;
+  --border:#2A2A4A;--border-hover:#3A3A5A;--border-focus:var(--primary);--border-error:var(--error);
+  --text-primary:#E8E8E8;--text-secondary:#A0A0B0;--text-tertiary:#6A6A7A;--text-on-primary:#FFFFFF;
+  --shadow-xs:0 1px 2px rgba(0,0,0,0.2);--shadow-sm:0 1px 3px rgba(0,0,0,0.3);--shadow-md:0 4px 12px rgba(0,0,0,0.35);--shadow-lg:0 8px 24px rgba(0,0,0,0.4);
+  --shadow-focus:0 0 0 3px rgba(74,144,217,0.3);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font-zh);color:var(--text-primary);background:var(--bg-page);transition:background var(--duration-slow) var(--ease-out),color var(--duration-slow) var(--ease-out);height:100vh;overflow:hidden}
+.app-layout{display:flex;height:100vh}
+/* Sidebar */
+.sidebar{width:var(--sidebar-width);background:var(--bg-sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+.sidebar-header{padding:20px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)}
+.sidebar-logo{width:32px;height:32px;background:var(--primary);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center}
+.sidebar-logo i{width:18px;height:18px;color:#fff}
+.sidebar-brand-name{font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--text-primary)}
+.sidebar-brand-ver{font-size:11px;color:var(--text-tertiary);font-family:var(--font-mono)}
+.sidebar-nav{flex:1;padding:12px 8px;overflow-y:auto}
+.sidebar-section-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-tertiary);padding:12px 12px 6px}
+.sidebar-section-label:first-child{padding-top:0}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--radius-md);font-size:13px;font-weight:450;color:var(--text-secondary);cursor:pointer;transition:all var(--duration-fast) var(--ease-out);position:relative}
+.nav-item i{width:18px;height:18px;flex-shrink:0}
+.nav-item:hover{background:var(--bg-hover);color:var(--text-primary)}
+.nav-item.active{background:var(--primary-ghost);color:var(--primary);font-weight:500}
+.nav-item.active::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:3px;background:var(--primary);border-radius:0 2px 2px 0}
+.nav-badge{margin-left:auto;padding:1px 7px;background:var(--error);color:#fff;font-size:10px;font-weight:700;border-radius:var(--radius-full);line-height:16px}
+.sidebar-footer{padding:12px 16px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.sidebar-avatar{width:32px;height:32px;background:var(--primary-lighter);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--primary)}
+.sidebar-user-name{font-size:13px;font-weight:500;color:var(--text-primary)}
+.sidebar-user-plan{font-size:11px;color:var(--accent-hover);display:flex;align-items:center;gap:4px}
+.sidebar-user-plan i{width:12px;height:12px}
+/* Main */
+.main-content{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.top-bar{height:56px;padding:0 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:var(--bg-card);flex-shrink:0;transition:background var(--duration-slow) var(--ease-out)}
+.page-title{font-family:var(--font-display);font-size:16px;font-weight:600;color:var(--text-primary)}
+.top-bar-right{display:flex;align-items:center;gap:8px}
+.btn-icon-sm{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-md);background:transparent;border:none;cursor:pointer;color:var(--text-secondary);transition:all var(--duration-fast)}
+.btn-icon-sm:hover{background:var(--bg-hover);color:var(--text-primary)}
+.btn-icon-sm i{width:18px;height:18px}
+.theme-toggle-sm{display:flex;align-items:center;gap:6px;padding:5px 12px;background:var(--bg-hover);border:1px solid var(--border);border-radius:var(--radius-full);cursor:pointer;font-size:12px;font-weight:500;color:var(--text-secondary);transition:all var(--duration-fast)}
+.theme-toggle-sm:hover{border-color:var(--border-hover);color:var(--text-primary)}
+.theme-toggle-sm i{width:14px;height:14px}
+.content-area{flex:1;overflow-y:auto;padding:28px}
+/* Settings Form */
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:960px}
+.settings-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:background var(--duration-slow) var(--ease-out),border-color var(--duration-slow) var(--ease-out)}
+.settings-card.full-width{grid-column:1/-1}
+.settings-card-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.settings-card-header i{width:18px;height:18px;color:var(--primary)}
+.settings-card-title{font-size:14px;font-weight:600;color:var(--text-primary)}
+.settings-card-body{padding:20px}
+/* Form elements */
+.form-group{margin-bottom:18px}
+.form-group:last-child{margin-bottom:0}
+.form-label{display:block;font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:6px}
+.form-hint{font-size:12px;color:var(--text-tertiary);margin-top:4px}
+.input{height:36px;padding:0 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);font-family:var(--font-zh);font-size:13px;color:var(--text-primary);transition:all var(--duration-fast) var(--ease-out);outline:none;width:100%}
+.input::placeholder{color:var(--text-tertiary)}
+.input:hover{border-color:var(--border-hover)}
+.input:focus{border-color:var(--border-focus);box-shadow:var(--shadow-focus)}
+.input-password{position:relative}
+.input-password .input{padding-right:40px}
+.input-password .toggle-pw{position:absolute;right:4px;top:50%;transform:translateY(-50%);background:none;border:none;padding:6px;cursor:pointer;color:var(--text-tertiary);border-radius:var(--radius-sm);transition:color var(--duration-fast)}
+.input-password .toggle-pw:hover{color:var(--text-secondary)}
+.input-password .toggle-pw i{width:16px;height:16px;display:block}
+.input-with-suffix{display:flex;gap:8px}
+.input-with-suffix .input{flex:1}
+/* Style cards */
+.style-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.style-card{border:2px solid var(--border);border-radius:var(--radius-lg);padding:14px;cursor:pointer;transition:all var(--duration-fast) var(--ease-out);text-align:center}
+.style-card:hover{border-color:var(--border-hover);transform:translateY(-1px)}
+.style-card.selected{border-color:var(--primary);background:var(--primary-ghost)}
+.style-card-icon{font-size:24px;margin-bottom:6px}
+.style-card-name{font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:2px}
+.style-card-desc{font-size:11px;color:var(--text-tertiary)}
+.style-card .check-mark{display:none;margin-top:6px;color:var(--primary)}
+.style-card.selected .check-mark{display:block}
+/* Term table list */
+.term-list{display:flex;flex-direction:column;gap:8px}
+.term-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-md);transition:all var(--duration-fast)}
+.term-item:hover{border-color:var(--border-hover)}
+.term-checkbox{width:18px;height:18px;border:1.5px solid var(--border-hover);border-radius:var(--radius-xs);display:flex;align-items:center;justify-content:center;transition:all var(--duration-fast);flex-shrink:0;background:var(--bg-input);cursor:pointer}
+.term-checkbox.checked{background:var(--primary);border-color:var(--primary)}
+.term-checkbox.checked i{width:12px;height:12px;color:#fff;stroke-width:3}
+.term-info{flex:1}
+.term-name{font-size:13px;font-weight:500;color:var(--text-primary)}
+.term-count{font-size:12px;color:var(--text-tertiary)}
+.term-actions{display:flex;gap:4px}
+.term-btn{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm);background:transparent;border:none;cursor:pointer;color:var(--text-tertiary);transition:all var(--duration-fast)}
+.term-btn:hover{background:var(--bg-hover);color:var(--text-primary)}
+.term-btn i{width:14px;height:14px}
+/* Radio group */
+.radio-group{display:flex;flex-direction:column;gap:10px}
+.radio-item{display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;color:var(--text-primary);user-select:none}
+.radio-dot{width:18px;height:18px;border:1.5px solid var(--border-hover);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all var(--duration-fast);flex-shrink:0;background:var(--bg-input)}
+.radio-dot.checked{border-color:var(--primary)}
+.radio-dot.checked::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--primary)}
+/* Toggle */
+.toggle{display:inline-flex;align-items:center;gap:10px;cursor:pointer;user-select:none;font-size:13px;color:var(--text-primary)}
+.toggle-track{width:40px;height:22px;background:var(--border-hover);border-radius:11px;position:relative;transition:background var(--duration-fast) var(--ease-out);flex-shrink:0}
+.toggle-thumb{width:18px;height:18px;background:#fff;border-radius:50%;position:absolute;top:2px;left:2px;transition:transform var(--duration-fast) var(--ease-spring);box-shadow:0 1px 3px rgba(0,0,0,0.15)}
+.toggle.active .toggle-track{background:var(--primary)}
+.toggle.active .toggle-thumb{transform:translateX(18px)}
+/* Select */
+.select{position:relative;width:100%}
+.select-trigger{height:36px;padding:0 36px 0 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);font-family:var(--font-zh);font-size:13px;color:var(--text-primary);cursor:pointer;display:flex;align-items:center;transition:all var(--duration-fast) var(--ease-out);width:100%;position:relative;user-select:none}
+.select-trigger:hover{border-color:var(--border-hover)}
+.select-trigger .chevron{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--text-tertiary);pointer-events:none}
+.select-trigger .chevron i{width:16px;height:16px;display:block}
+.select-placeholder{color:var(--text-tertiary)}
+.select-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:var(--shadow-md);z-index:10;opacity:0;visibility:hidden;transform:translateY(-4px);transition:all var(--duration-fast) var(--ease-out);max-height:280px;overflow-y:auto}
+.select.open .select-dropdown{opacity:1;visibility:visible;transform:translateY(0)}
+.select-option{padding:10px 12px;cursor:pointer;transition:background var(--duration-fast)}
+.select-option:hover{background:var(--primary-ghost)}
+.select-option.selected{background:var(--primary-ghost);border-left:2px solid var(--primary)}
+.select-option + .select-option{border-top:1px solid var(--border)}
+/* Directory picker */
+.dir-picker{display:flex;gap:8px}
+.dir-picker .input{flex:1}
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 16px;height:34px;border:1px solid transparent;border-radius:var(--radius-md);font-family:var(--font-zh);font-size:13px;font-weight:500;cursor:pointer;transition:all var(--duration-fast) var(--ease-out);white-space:nowrap}
+.btn i{width:16px;height:16px;flex-shrink:0}
+.btn-primary{background:var(--primary);color:var(--text-on-primary);border-color:var(--primary)}
+.btn-primary:hover{background:var(--primary-hover)}
+.btn-secondary{background:transparent;color:var(--primary);border-color:var(--border)}
+.btn-secondary:hover{background:var(--primary-ghost);border-color:var(--primary-light)}
+.btn-sm{height:30px;padding:0 12px;font-size:12px}
+.btn i{width:16px;height:16px}
+.btn-accent{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-accent:hover{background:var(--accent-hover)}
+/* Footer bar */
+.settings-footer{padding:16px 28px;border-top:1px solid var(--border);background:var(--bg-card);display:flex;justify-content:flex-end;gap:10px;flex-shrink:0;transition:background var(--duration-slow) var(--ease-out)}
+@media(max-width:900px){.sidebar{width:64px}.sidebar-brand,.sidebar-section-label,.nav-item span,.nav-badge,.sidebar-user,.sidebar-brand-ver{display:none}.nav-item{justify-content:center;padding:10px}.sidebar-header{justify-content:center;padding:16px}.sidebar-footer{justify-content:center}.settings-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo"><i data-lucide="languages"></i></div>
+      <div class="sidebar-brand"><span class="sidebar-brand-name">英译中翻译工具</span><span class="sidebar-brand-ver">v1.0.0</span></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">主要功能</div>
+      <div class="nav-item"><i data-lucide="layout-dashboard"></i><span>工作台</span></div>
+      <div class="nav-item"><i data-lucide="history"></i><span>翻译记录</span><span class="nav-badge">12</span></div>
+      <div class="nav-item"><i data-lucide="book-open"></i><span>术语表</span></div>
+      <div class="nav-item"><i data-lucide="file-stack"></i><span>批量翻译</span></div>
+      <div class="sidebar-section-label">系统</div>
+      <div class="nav-item active"><i data-lucide="settings"></i><span>翻译设置</span></div>
+      <div class="nav-item"><i data-lucide="user-circle"></i><span>账户信息</span></div>
+      <div class="nav-item"><i data-lucide="life-buoy"></i><span>帮助与反馈</span></div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-avatar">Li</div>
+      <div class="sidebar-user"><div class="sidebar-user-name">Li Wei</div><div class="sidebar-user-plan"><i data-lucide="crown"></i> 专业版</div></div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="top-bar">
+      <h1 class="page-title">翻译设置</h1>
+      <div class="top-bar-right">
+        <button class="theme-toggle-sm" onclick="toggleTheme()"><i data-lucide="moon"></i><span>暗色</span></button>
+        <button class="btn-icon-sm"><i data-lucide="bell"></i></button>
+      </div>
+    </header>
+
+    <div class="content-area">
+      <div class="settings-grid">
+
+        <!-- Translation Style -->
+        <div class="settings-card full-width">
+          <div class="settings-card-header"><i data-lucide="palette"></i><span class="settings-card-title">翻译风格</span></div>
+          <div class="settings-card-body">
+            <div class="style-cards">
+              <div class="style-card" onclick="selectStyle(this)">
+                <div class="style-card-icon">🎓</div>
+                <div class="style-card-name">学术正式</div>
+                <div class="style-card-desc">论文、研究报告、学术文献</div>
+                <div class="check-mark"><i data-lucide="check-circle" style="width:20px;height:20px"></i></div>
+              </div>
+              <div class="style-card selected" onclick="selectStyle(this)">
+                <div class="style-card-icon">💼</div>
+                <div class="style-card-name">商务通用</div>
+                <div class="style-card-desc">商务邮件、报告、合同</div>
+                <div class="check-mark"><i data-lucide="check-circle" style="width:20px;height:20px"></i></div>
+              </div>
+              <div class="style-card" onclick="selectStyle(this)">
+                <div class="style-card-icon">💬</div>
+                <div class="style-card-name">日常口语</div>
+                <div class="style-card-desc">博客、日常文档、社交媒体</div>
+                <div class="check-mark"><i data-lucide="check-circle" style="width:20px;height:20px"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Terminology -->
+        <div class="settings-card">
+          <div class="settings-card-header"><i data-lucide="book-open"></i><span class="settings-card-title">术语表</span></div>
+          <div class="settings-card-body">
+            <div class="term-list">
+              <div class="term-item">
+                <div class="term-checkbox checked" onclick="this.classList.toggle('checked')"><i data-lucide="check"></i></div>
+                <div class="term-info"><div class="term-name">计算机术语表</div><div class="term-count">128 条术语</div></div>
+                <div class="term-actions"><button class="term-btn"><i data-lucide="edit-3"></i></button></div>
+              </div>
+              <div class="term-item">
+                <div class="term-checkbox" onclick="this.classList.toggle('checked')"><i data-lucide="check"></i></div>
+                <div class="term-info"><div class="term-name">医学术语表</div><div class="term-count">256 条术语</div></div>
+                <div class="term-actions"><button class="term-btn"><i data-lucide="edit-3"></i></button></div>
+              </div>
+              <div class="term-item">
+                <div class="term-checkbox checked" onclick="this.classList.toggle('checked')"><i data-lucide="check"></i></div>
+                <div class="term-info"><div class="term-name">用户自定义</div><div class="term-count">12 条术语</div></div>
+                <div class="term-actions"><button class="term-btn"><i data-lucide="edit-3"></i></button></div>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:14px">
+              <button class="btn btn-secondary btn-sm"><i data-lucide="upload"></i>导入</button>
+              <button class="btn btn-secondary btn-sm"><i data-lucide="plus"></i>新建</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Output Settings -->
+        <div class="settings-card">
+          <div class="settings-card-header"><i data-lucide="file-output"></i><span class="settings-card-title">输出设置</span></div>
+          <div class="settings-card-body">
+            <div class="form-group">
+              <label class="form-label">输出格式</label>
+              <div class="radio-group">
+                <label class="radio-item" onclick="selectRadio(this)"><span class="radio-dot"></span><span>PDF 文档</span></label>
+                <label class="radio-item" onclick="selectRadio(this)"><span class="radio-dot checked"></span><span>Word 文档 (.docx)</span></label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">输出目录</label>
+              <div class="dir-picker">
+                <input type="text" class="input" value="D:\翻译结果" readonly>
+                <button class="btn btn-secondary btn-sm"><i data-lucide="folder-open"></i> 更改</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">文件命名规则</label>
+              <div class="select">
+                <div class="select-trigger"><span>原文名_中文</span><span class="chevron"><i data-lucide="chevron-down"></i></span></div>
+              </div>
+              <div class="form-hint">示例：report_中文.docx</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- API Config -->
+        <div class="settings-card full-width">
+          <div class="settings-card-header"><i data-lucide="key-round"></i><span class="settings-card-title">API 配置</span></div>
+          <div class="settings-card-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+              <div class="form-group">
+                <label class="form-label">翻译引擎</label>
+                <div class="select">
+                  <div class="select-trigger" onclick="this.parentElement.classList.toggle('open')"><span id="selectedEngine">DeepSeek ⭐</span><span class="chevron"><i data-lucide="chevron-down"></i></span></div>
+                  <div class="select-dropdown" id="engineDropdown">
+                    <div class="select-option selected" data-value="deepseek" onclick="selectEngine(this,'DeepSeek ⭐','综合最优，中文翻译质量高')">
+                      <div><strong>DeepSeek</strong> <span style="color:var(--accent);font-size:11px">⭐ 推荐</span></div>
+                      <div style="font-size:11px;color:var(--text-tertiary)">¥1/百万输入 · 综合最优</div>
+                    </div>
+                    <div class="select-option" data-value="qwen" onclick="selectEngine(this,'通义千问 ⭐','阿里云背书，稳定性最好')">
+                      <div><strong>通义千问</strong> <span style="color:var(--accent);font-size:11px">⭐ 推荐</span></div>
+                      <div style="font-size:11px;color:var(--text-tertiary)">¥0.8/百万输入 · 稳定性最好</div>
+                    </div>
+                    <div class="select-option" data-value="glm" onclick="selectEngine(this,'智谱 GLM-Flash ⭐','极致低价，适合大量翻译')">
+                      <div><strong>智谱 GLM-Flash</strong> <span style="color:var(--accent);font-size:11px">⭐ 推荐</span></div>
+                      <div style="font-size:11px;color:var(--text-tertiary)">¥0.1/百万输入 · 极致低价</div>
+                    </div>
+                    <div class="select-option" data-value="moonshot" onclick="selectEngine(this,'Moonshot (Kimi)','长文档能力强')">
+                      <div><strong>Moonshot (Kimi)</strong></div>
+                      <div style="font-size:11px;color:var(--text-tertiary)">¥1/百万输入 · 长文档优化</div>
+                    </div>
+                    <div class="select-option" data-value="baichuan" onclick="selectEngine(this,'百川大模型','中文文学性翻译优秀')">
+                      <div><strong>百川大模型</strong></div>
+                      <div style="font-size:11px;color:var(--text-tertiary)">¥1/百万输入 · 文学性翻译</div>
+                    </div>
+                    <div class="select-option" data-value="siliconflow" onclick="selectEngine(this,'硅基流动','聚合平台，一个 Key 多模型')">
+                      <div><strong>硅基流动</strong></div>
+                      <div style="font-size:11px;color:var(--text-tertiary)">¥0.5/百万输入 · 聚合平台</div>
+                    </div>
+                    <div class="select-option" data-value="custom" onclick="selectEngine(this,'自定义 OpenAI 兼容','手动配置 baseUrl 和模型')">
+                      <div><strong>自定义</strong></div>
+                      <div style="font-size:11px;color:var(--text-tertiary)">手动配置 OpenAI 兼容引擎</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-hint" id="engineHint">综合最优，中文翻译质量高 · <a href="https://platform.deepseek.com" target="_blank" style="color:var(--primary-light)">获取 API Key →</a></div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">使用模式</label>
+                <div class="radio-group">
+                  <label class="radio-item" onclick="selectRadio(this)"><span class="radio-dot"></span><span>使用产品内置额度</span></label>
+                  <label class="radio-item" onclick="selectRadio(this)"><span class="radio-dot checked"></span><span>自备 API Key</span></label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">API Key</label>
+                <div class="input-password">
+                  <input type="password" class="input" placeholder="请输入您的 API Key" value="sk-abc123456789xyz">
+                  <button class="toggle-pw" onclick="this.previousElementSibling.type=this.previousElementSibling.type==='password'?'text':'password'"><i data-lucide="eye"></i></button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">连接测试</label>
+                <div style="display:flex;align-items:center;gap:10px;height:36px">
+                  <button class="btn btn-accent btn-sm" onclick="testConnection(this)"><i data-lucide="zap"></i> 测试连接</button>
+                  <span style="font-size:12px;color:var(--accent);display:flex;align-items:center;gap:4px" id="connStatus"><i data-lucide="check-circle" style="width:14px;height:14px"></i> 连接正常</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <footer class="settings-footer">
+      <button class="btn btn-secondary">取消</button>
+      <button class="btn btn-primary"><i data-lucide="save"></i> 保存设置</button>
+    </footer>
+  </main>
+</div>
+
+<script>
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');const b=document.querySelector('.theme-toggle-sm');b.querySelector('span').textContent=d?'暗色':'亮色';b.querySelector('i').setAttribute('data-lucide',d?'moon':'sun');lucide.createIcons()}
+function selectStyle(el){el.parentElement.querySelectorAll('.style-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected')}
+function selectRadio(el){const g=el.closest('.radio-group');g.querySelectorAll('.radio-dot').forEach(d=>d.classList.remove('checked'));el.querySelector('.radio-dot').classList.add('checked')}
+const ENGINE_LINKS={deepseek:'https://platform.deepseek.com',qwen:'https://dashscope.console.aliyun.com',glm:'https://open.bigmodel.cn',moonshot:'https://platform.moonshot.cn',baichuan:'https://platform.baichuan-ai.com',siliconflow:'https://cloud.siliconflow.cn'};
+function selectEngine(el,name,hint){
+  el.closest('.select-dropdown').querySelectorAll('.select-option').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('selectedEngine').textContent=name;
+  const key=el.dataset.value;
+  const link=ENGINE_LINKS[key];
+  document.getElementById('engineHint').innerHTML=hint+(link?' · <a href="'+link+'" target="_blank" style="color:var(--primary-light)">获取 API Key →</a>':'');
+  el.closest('.select').classList.remove('open');
+}
+function testConnection(btn){btn.innerHTML='<i data-lucide="loader"></i> 测试中...';lucide.createIcons();setTimeout(()=>{btn.innerHTML='<i data-lucide="check"></i> 连接成功';btn.style.background='var(--accent)';btn.style.borderColor='var(--accent)';lucide.createIcons()},1500)}
+lucide.createIcons();
+</script>
+</body>
+</html>
