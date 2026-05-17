@@ -14,7 +14,7 @@ Usage:
         input_path='document.pdf',
         output_path='document_cn.pdf',
         engine='deepseek',
-        api_key='sk-...',
+        api_key='YOUR_API_KEY_HERE',
         style='business',
     )
 """
