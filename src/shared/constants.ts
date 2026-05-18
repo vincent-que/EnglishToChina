@@ -113,6 +113,8 @@ export const IPC_CHANNELS = {
 export const DEFAULT_SETTINGS = {
   engine: 'kimi',
   apiKey: '',
+  translationMode: 'proxy' as const,
+  proxyServerUrl: '',
   style: 'business' as const,
   outputFormat: 'docx' as const,
   autoSave: true,
@@ -121,3 +123,11 @@ export const DEFAULT_SETTINGS = {
   termTableIds: [],
   memoryEnabled: true,
 };
+
+export function resolveDefaultSettings(env: Record<string, string | undefined> = {}) {
+  const proxyServerUrl = (env.CUSTOMER_PROXY_SERVER_URL || '').trim().replace(/\/+$/, '');
+  return {
+    ...DEFAULT_SETTINGS,
+    proxyServerUrl: proxyServerUrl || DEFAULT_SETTINGS.proxyServerUrl,
+  };
+}

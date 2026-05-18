@@ -15,6 +15,10 @@
     "build:main": "tsc -p tsconfig.main.json",
     "dist": "npm run build && electron-builder",
     "dist:win": "npm run build && electron-builder --win",
+    "license:generate": "node scripts/generate-monthly-license.js",
+    "server:proxy": "node server/proxy-server.js",
+    "server:smoke": "node server/smoke-test.js",
+    "test:proxy": "node --test tests/proxy-server.test.js",
     "python:prepare-embedded": "powershell -ExecutionPolicy Bypass -File scripts/prepare-python-embedded.ps1",
     "typecheck": "tsc --noEmit -p tsconfig.renderer.json && tsc --noEmit -p tsconfig.main.json",
     "lint": "eslint src/ --ext .ts,.tsx"

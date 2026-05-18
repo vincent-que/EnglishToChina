@@ -116,11 +116,49 @@ export function Settings() {
     <div className="settings-page">
       <div className="settings-header">
         <h1>翻译设置</h1>
-        <p className="settings-subtitle">配置翻译引擎、翻译风格、术语表和输出格式</p>
+        <p className="settings-subtitle">客户版默认使用服务端翻译，授权后即可使用</p>
       </div>
 
       <div className="settings-section">
-        <h2 className="settings-section-title">翻译引擎</h2>
+        <h2 className="settings-section-title">翻译服务</h2>
+        <div className="style-options">
+          <label className={`style-option ${localSettings.translationMode === 'proxy' ? 'style-active' : ''}`}>
+            <input
+              type="radio"
+              name="translationMode"
+              value="proxy"
+              checked={localSettings.translationMode === 'proxy'}
+              onChange={() => updateLocal('translationMode', 'proxy')}
+            />
+            <span className="style-label">客户版服务端翻译</span>
+          </label>
+          <label className={`style-option ${localSettings.translationMode === 'local' ? 'style-active' : ''}`}>
+            <input
+              type="radio"
+              name="translationMode"
+              value="local"
+              checked={localSettings.translationMode === 'local'}
+              onChange={() => updateLocal('translationMode', 'local')}
+            />
+            <span className="style-label">本地备用 Key</span>
+          </label>
+        </div>
+        <div className="settings-field service-url-field">
+          <label className="settings-label">翻译服务地址</label>
+          <input
+            type="text"
+            className="input"
+            placeholder="例如 https://your-domain.com"
+            value={localSettings.proxyServerUrl}
+            onChange={(e) => updateLocal('proxyServerUrl', e.target.value)}
+          />
+          <p className="settings-hint">客户正式包应预置服务端地址，客户无需配置模型 Key。</p>
+        </div>
+      </div>
+
+      {localSettings.translationMode === 'local' && (
+      <div className="settings-section">
+        <h2 className="settings-section-title">本地备用引擎</h2>
         <div className="engine-grid">
           {Object.entries(ENGINE_REGISTRY).map(([key, engine]) => (
             <div
@@ -139,9 +177,6 @@ export function Settings() {
             </div>
           ))}
         </div>
-      </div>
-
-      <div className="settings-section">
         <h2 className="settings-section-title">API Key</h2>
         <div className="settings-field">
           <label className="settings-label">API Key</label>
@@ -172,6 +207,7 @@ export function Settings() {
           <p className="settings-hint">支持系统安全存储时，API Key 会加密保存在本机。</p>
         </div>
       </div>
+      )}
 
       <div className="settings-section">
         <h2 className="settings-section-title">翻译风格</h2>
@@ -398,6 +434,9 @@ export function Settings() {
           font-weight: 500;
           color: var(--text-primary);
           margin-bottom: 6px;
+        }
+        .service-url-field {
+          margin-top: 14px;
         }
         .api-key-row {
           display: flex;

@@ -7,6 +7,7 @@ import { SettingsService } from '../services/settings.service';
 import { TermService } from '../services/term.service';
 import { LicenseService } from '../services/license.service';
 import { MemoryService } from '../services/memory.service';
+import { ProxyTranslationService } from '../services/proxy-translation.service';
 import type { AppSettings } from '../../shared/types';
 
 export function registerIpcHandlers(win: BrowserWindow, worker: PythonWorkerManager): void {
@@ -15,7 +16,8 @@ export function registerIpcHandlers(win: BrowserWindow, worker: PythonWorkerMana
   const termService = new TermService();
   const licenseService = new LicenseService();
   const memoryService = new MemoryService();
-  const translateService = new TranslateService(worker, win, memoryService);
+  const proxyTranslationService = new ProxyTranslationService();
+  const translateService = new TranslateService(worker, win, memoryService, licenseService);
 
   ipcMain.handle('translation:start', async (_event, args) => {
     const filePath = args?.filePath;
@@ -27,6 +29,7 @@ export function registerIpcHandlers(win: BrowserWindow, worker: PythonWorkerMana
     }
 
     const taskId = translateService.startTask(filePath, {
+      taskId: args.taskId ? String(args.taskId) : undefined,
       style: (args.style || 'business') as AppSettings['style'],
       termTables: termService.resolveTables(args.termTables || []),
       outputFormat: (args.outputFormat || 'docx') as AppSettings['outputFormat'],
@@ -123,13 +126,37 @@ export function registerIpcHandlers(win: BrowserWindow, worker: PythonWorkerMana
 
   ipcMain.handle('app:getDiagnostics', async () => {
     const runtime = worker.getRuntimeInfo();
+    const license = licenseService.validate();
+    const settings = settingsService.getSettings();
+    const proxyHealth = await proxyTranslationService.checkHealth(settings.proxyServerUrl);
+    const proxyLicense = settings.translationMode === 'proxy'
+      ? await proxyTranslationService.validateLicense(settings.proxyServerUrl, license.code || '')
+      : { ok: true, message: '本地备用模式无需服务端授权校验' };
     try {
       const python = await worker.execute('diagnostics', {}, 15000);
-      return { ok: true, runtime, python };
+      return {
+        ok: true,
+        runtime,
+        python,
+        license,
+        translationService: {
+          mode: settings.translationMode,
+          proxyServerConfigured: Boolean(settings.proxyServerUrl?.trim()),
+          health: proxyHealth,
+          license: proxyLicense,
+        },
+      };
     } catch (err) {
       return {
         ok: false,
         runtime,
+        license,
+        translationService: {
+          mode: settings.translationMode,
+          proxyServerConfigured: Boolean(settings.proxyServerUrl?.trim()),
+          health: proxyHealth,
+          license: proxyLicense,
+        },
         error: err instanceof Error ? err.message : 'Python Worker 自检失败',
       };
     }

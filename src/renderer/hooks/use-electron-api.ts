@@ -62,9 +62,10 @@ export function useElectronApi() {
   }, []);
 
   const startTranslation = useCallback(
-    async (filePath: string, style: string, outputFormat: string, termTables: string[] = []) => {
+    async (filePath: string, style: string, outputFormat: string, termTables: string[] = [], taskId?: string) => {
       if (!api) return { taskId: `mock_${Date.now()}` };
       return api.translation.start({
+        taskId,
         filePath,
         style,
         termTables,

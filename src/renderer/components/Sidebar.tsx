@@ -2,12 +2,11 @@ import { useThemeStore } from '../stores/theme-store';
 
 interface SidebarProps {
   currentPage: string;
-  onNavigate: (page: 'workspace' | 'preview' | 'settings' | 'activation') => void;
+  onNavigate: (page: 'workspace' | 'settings' | 'activation') => void;
 }
 
 const navItems = [
   { id: 'workspace' as const, label: '工作台' },
-  { id: 'preview' as const, label: '翻译预览' },
   { id: 'settings' as const, label: '翻译设置' },
   { id: 'activation' as const, label: '账户信息' },
 ];
@@ -37,15 +36,6 @@ export function Sidebar({ currentPage, onNavigate }: SidebarProps) {
                   <rect width="7" height="5" x="14" y="3" rx="1" />
                   <rect width="7" height="9" x="14" y="12" rx="1" />
                   <rect width="7" height="5" x="3" y="16" rx="1" />
-                </>
-              )}
-              {item.id === 'preview' && (
-                <>
-                  <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-                  <polyline points="14 2 14 8 20 8" />
-                  <line x1="16" x2="8" y1="13" y2="13" />
-                  <line x1="16" x2="8" y1="17" y2="17" />
-                  <polyline points="10 9 9 9 8 9" />
                 </>
               )}
               {item.id === 'settings' && (

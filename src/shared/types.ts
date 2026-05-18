@@ -108,6 +108,8 @@ export interface TranslationTask {
 export interface AppSettings {
   engine: string;
   apiKey: string;
+  translationMode: 'proxy' | 'local';
+  proxyServerUrl: string;
   style: 'academic' | 'business' | 'casual';
   outputFormat: 'docx' | 'pdf';
   autoSave: boolean;
@@ -124,8 +126,11 @@ export interface AppSettings {
 export interface LicenseInfo {
   status: 'active' | 'expired' | 'trial' | 'invalid';
   plan?: string;
+  code?: string;
+  validFrom?: string;
   activatedAt?: string;
   expiresAt?: string;
+  daysRemaining?: number;
   features: string[];
 }
 

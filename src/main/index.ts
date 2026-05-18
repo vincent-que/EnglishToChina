@@ -1,10 +1,13 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, Menu } from 'electron';
 import path from 'path';
 import { registerIpcHandlers } from './ipc/handlers';
 import { PythonWorkerManager } from './workers/python-worker';
 
 let mainWindow: BrowserWindow | null = null;
 let pythonWorker: PythonWorkerManager | null = null;
+
+app.disableHardwareAcceleration();
+app.commandLine.appendSwitch('disable-gpu');
 
 function createWindow(): void {
   mainWindow = new BrowserWindow({
@@ -45,6 +48,7 @@ function createWindow(): void {
 }
 
 app.whenReady().then(() => {
+  Menu.setApplicationMenu(null);
   pythonWorker = new PythonWorkerManager();
   createWindow();
   registerIpcHandlers(mainWindow!, pythonWorker);

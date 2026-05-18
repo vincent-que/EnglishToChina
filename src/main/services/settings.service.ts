@@ -2,11 +2,36 @@ import { app, safeStorage } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import type { AppSettings } from '../../shared/types';
-import { DEFAULT_SETTINGS } from '../../shared/constants';
+import { resolveDefaultSettings } from '../../shared/constants';
 
 type StoredSettings = Partial<AppSettings> & {
   apiKeyEncrypted?: string;
 };
+
+export function resolvePackagedCustomerConfig(resourcesPath = process.resourcesPath): Partial<AppSettings> {
+  const configPaths = [
+    path.join(resourcesPath, 'customer-config.json'),
+    path.join(resourcesPath, 'resources', 'customer-config.json'),
+  ];
+  try {
+    const configPath = configPaths.find((candidate) => fs.existsSync(candidate));
+    if (!configPath) return {};
+    const data = JSON.parse(fs.readFileSync(configPath, 'utf-8')) as Partial<AppSettings>;
+    const proxyServerUrl = String(data.proxyServerUrl || '').trim().replace(/\/+$/, '');
+    return proxyServerUrl ? { proxyServerUrl } : {};
+  } catch (err) {
+    console.error('Failed to load customer config:', err);
+    return {};
+  }
+}
+
+export function mergeStoredSettings(defaultSettings: Partial<AppSettings>, stored: StoredSettings): AppSettings {
+  const settings = { ...defaultSettings, ...stored } as AppSettings;
+  if (!String(stored.proxyServerUrl || '').trim() && defaultSettings.proxyServerUrl) {
+    settings.proxyServerUrl = defaultSettings.proxyServerUrl;
+  }
+  return settings;
+}
 
 export class SettingsService {
   private settingsPath: string;
@@ -18,11 +43,15 @@ export class SettingsService {
   }
 
   private loadSettings(): AppSettings {
+    const defaultSettings = {
+      ...resolveDefaultSettings(process.env),
+      ...resolvePackagedCustomerConfig(),
+    };
     try {
       if (fs.existsSync(this.settingsPath)) {
         const data = fs.readFileSync(this.settingsPath, 'utf-8');
         const stored = JSON.parse(data) as StoredSettings;
-        const settings = { ...DEFAULT_SETTINGS, ...stored };
+        const settings = mergeStoredSettings(defaultSettings, stored);
         settings.apiKey = this.decryptApiKey(stored);
 
         if (stored.apiKey && safeStorage.isEncryptionAvailable()) {
@@ -35,7 +64,7 @@ export class SettingsService {
     } catch (err) {
       console.error('Failed to load settings:', err);
     }
-    return { ...DEFAULT_SETTINGS };
+    return { ...defaultSettings };
   }
 
   getSettings(): AppSettings {

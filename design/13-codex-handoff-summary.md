@@ -5,13 +5,13 @@
 
 ## 1. 项目概况
 
-当前项目是一个 Electron + React + TypeScript + Python Worker 的英文文档转中文桌面工具。
+当前项目是一个 Electron + React + TypeScript + Python Worker 的英文文档转中文桌面工具。客户版方向已调整为“月度授权码 + 服务端翻译中转”，客户不再默认自行配置模型 Key。
 
 目标：
 
 - 输入英文 PDF / Word。
 - 输出尽量保持原排版的中文 Word / PDF。
-- 支持 Kimi 等 OpenAI-compatible 国内模型。
+- 客户版默认通过服务端调用 Kimi/DeepSeek/GLM 等国内模型，本地 API Key 仅作为备用模式。
 - 支持术语表、历史记录、任务队列、永久记忆和本地授权壳。
 
 ## 2. 当前开发原则
@@ -37,10 +37,10 @@
 
 ### 翻译引擎
 
-- 默认引擎为 Kimi。
+- 客户版默认翻译模式为服务端代理；Kimi 是本地备用模式中的默认推荐之一。
 - 已支持 DeepSeek、通义千问、GLM、Moonshot/Kimi、百川、硅基流动等 OpenAI-compatible 接口。
 - API 调用失败会抛错，不再静默返回英文原文。
-- 设置页支持 API Key 测试连接。
+- 设置页保留本地备用 API Key 测试连接，但客户默认流程是输入授权码后使用服务端翻译。
 
 ### 设置与安全
 
@@ -80,9 +80,9 @@
 - 已删除设备指纹采集、设备绑定、设备管理相关设计和代码口径。
 - 授权系统采用无设备指纹设计。
 - 已新增 `LicenseService` 本地服务壳。
-- 支持授权码格式校验。
-- 支持本地待验证授权状态缓存。
-- 尚未接入真实授权服务器和签名令牌校验。
+- 支持月度授权码格式校验、有效期和剩余天数展示。
+- 支持本地授权状态缓存。
+- 翻译请求会携带授权码给服务端做二次校验。
 
 ### UI 文案
 
@@ -135,6 +135,7 @@ Python：
 - `design/11-current-version-backlog.md`
 - `design/12-permanent-memory-agent.md`
 - `design/13-codex-handoff-summary.md`
+- `design/14-client-feedback-roadmap.md`
 
 ## 5. 最近验证状态
 
@@ -165,15 +166,17 @@ rg "璇|鏂|涓|閿|鎵|娴|鑷|缈|鎺|楼|鈥|�" src python package.json req
 
 - 该包适合本机测试。
 - 尚不是正式可发版。
-- 主要原因：Python embedded runtime、正式安装器、授权服务器、字体资源仍未完成。
+- 主要原因：服务端翻译代理、Python embedded runtime、正式安装器、字体资源仍未完成。
 
 ## 7. 已知未完成事项
 
 P0：
 
+- 配置并验证服务端翻译代理，解决客户不填写模型 Key 的开箱即用问题。
+- 修复客户 ZIP 翻译任务不能停留在“排队中”，失败必须显示明确中文错误。
 - 打包 Python embedded runtime 和依赖，解决无 Python 环境电脑不可用。
 - 中文字体资源打包。
-- 授权服务器和签名令牌校验。
+- 服务端授权校验和模型池自动切换。
 
 P1：
 
@@ -193,14 +196,15 @@ P2：
 
 建议优先做：
 
-1. Python embedded runtime 打包方案。
-2. 字体资源检查和打包。
-3. 重新生成 `win-unpacked` 并在无系统 Python 环境下验证。
+1. 服务端翻译代理地址配置和健康检查。
+2. 月度授权码 + 服务端二次校验联调。
+3. 样例 DOCX/PDF 在客户 ZIP 中不填模型 Key 完成翻译。
+4. 字体资源检查和打包。
 
 原因：
 
 - 这是当前小范围试用的最大阻塞。
-- 不依赖授权服务器。
+- 不依赖客户自行配置模型 Key。
 - 不需要引入 OCR 大依赖。
 - 能直接提升交付可用性。
 
@@ -217,4 +221,3 @@ npx.cmd electron-builder --win --dir --config.win.signAndEditExecutable=false
 ```
 
 常规 `npm run dist:win` 可能因 `winCodeSign` 下载失败而失败。
-

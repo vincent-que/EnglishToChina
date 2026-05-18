@@ -5,10 +5,13 @@ import { PythonWorkerManager } from '../workers/python-worker';
 import { FileService } from './file.service';
 import { SettingsService } from './settings.service';
 import { MemoryService } from './memory.service';
+import { LicenseService } from './license.service';
+import { ProxyTranslationService } from './proxy-translation.service';
 import type { TranslationTask, AppSettings, DocumentModel, TranslationProgress } from '../../shared/types';
 import { getFileType } from '../../shared/types';
 
 interface TranslateTaskOptions {
+  taskId?: string;
   style: AppSettings['style'];
   termTables: unknown[];
   outputFormat: AppSettings['outputFormat'];
@@ -26,20 +29,29 @@ export class TranslateService {
   private fileService: FileService;
   private settingsService: SettingsService;
   private memoryService: MemoryService;
+  private licenseService: LicenseService;
+  private proxyTranslationService: ProxyTranslationService;
 
-  constructor(worker: PythonWorkerManager, win: BrowserWindow, memoryService = new MemoryService()) {
+  constructor(
+    worker: PythonWorkerManager,
+    win: BrowserWindow,
+    memoryService = new MemoryService(),
+    licenseService = new LicenseService()
+  ) {
     this.worker = worker;
     this.win = win;
     this.fileService = new FileService();
     this.settingsService = new SettingsService();
     this.memoryService = memoryService;
+    this.licenseService = licenseService;
+    this.proxyTranslationService = new ProxyTranslationService();
     this.historyPath = path.join(app.getPath('userData'), 'translation-history.json');
     this.tasks = this.loadHistory();
   }
 
   startTask(filePath: string, options: TranslateTaskOptions): string {
     if (!filePath) throw new Error('文件路径不能为空');
-    const taskId = `task_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+    const taskId = options.taskId || `task_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
     const task: TranslationTask = {
       id: taskId,
       filePath,
@@ -155,9 +167,13 @@ export class TranslateService {
     const settings = this.settingsService.getSettings();
     const apiKey = options.apiKey || settings.apiKey;
     const engine = options.engine || settings.engine;
+    const licenseCode = this.licenseService.getActiveLicenseCode();
 
-    if (!apiKey) {
-      throw new Error('请先在设置中配置 API Key');
+    if (settings.translationMode === 'proxy' && !licenseCode) {
+      throw new Error('授权码无效或已过期，请在账户信息页输入当月授权码');
+    }
+    if (settings.translationMode !== 'proxy' && !apiKey) {
+      throw new Error('本地备用模式需要先在设置中配置 API Key');
     }
 
     task.status = 'parsing';
@@ -191,25 +207,40 @@ export class TranslateService {
       });
     }
 
-    const translated = await this.worker.execute<DocumentModel>(
-      'translate',
-      {
+    const translated = settings.translationMode === 'proxy'
+      ? await this.proxyTranslationService.translateDocument({
         documentModel: memoryPrepared.documentModel,
-        style: options.style,
+        settings,
+        licenseCode,
         termTables: memoryPrepared.termTables,
-        apiKey,
-        engine,
-      },
-      300000,
-      ({ percent, stage }) => {
-        const mappedPercent = 20 + Math.round(percent * 0.6);
-        this.sendProgress(task.id, {
-          percent: Math.min(79, mappedPercent),
-          stage: 'translating',
-          message: stage,
-        });
-      }
-    );
+        onProgress: (percent, message) => {
+          const mappedPercent = 20 + Math.round(percent * 0.6);
+          this.sendProgress(task.id, {
+            percent: Math.min(79, mappedPercent),
+            stage: 'translating',
+            message,
+          });
+        },
+      })
+      : await this.worker.execute<DocumentModel>(
+        'translate',
+        {
+          documentModel: memoryPrepared.documentModel,
+          style: options.style,
+          termTables: memoryPrepared.termTables,
+          apiKey,
+          engine,
+        },
+        300000,
+        ({ percent, stage }) => {
+          const mappedPercent = 20 + Math.round(percent * 0.6);
+          this.sendProgress(task.id, {
+            percent: Math.min(79, mappedPercent),
+            stage: 'translating',
+            message: stage,
+          });
+        }
+      );
 
     if (settings.memoryEnabled) {
       const stats = this.memoryService.saveDocumentTranslations({

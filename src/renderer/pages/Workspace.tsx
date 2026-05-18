@@ -17,20 +17,35 @@ export function Workspace() {
   const tasks = useTranslationStore((s) => s.tasks);
   const settings = useTranslationStore((s) => s.settings);
   const addTask = useTranslationStore((s) => s.addTask);
+  const updateTask = useTranslationStore((s) => s.updateTask);
   const removeTask = useTranslationStore((s) => s.removeTask);
   const [dragOver, setDragOver] = useState(false);
 
   const enqueueFile = useCallback(async (filePath: string, fileName?: string) => {
-    const res = await startTranslation(filePath, settings.style, settings.outputFormat, settings.termTableIds);
+    const taskId = `task_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+    const displayName = fileName || filePath.split(/[/\\]/).pop() || filePath;
     addTask({
-      id: res.taskId,
+      id: taskId,
       filePath,
-      fileName: fileName || filePath.split(/[/\\]/).pop() || filePath,
+      fileName: displayName,
       status: 'pending',
       progress: 0,
       createdAt: Date.now(),
     });
-  }, [startTranslation, settings, addTask]);
+
+    try {
+      await startTranslation(filePath, settings.style, settings.outputFormat, settings.termTableIds, taskId);
+    } catch (err) {
+      updateTask(taskId, {
+        status: 'error',
+        error: {
+          code: 'START_FAILED',
+          message: err instanceof Error ? err.message : '翻译任务启动失败',
+          recoverable: true,
+        },
+      });
+    }
+  }, [startTranslation, settings, addTask, updateTask]);
 
   const handleSelectFiles = useCallback(async () => {
     const result = await selectFiles();

@@ -69,7 +69,7 @@ PDF -> pdf2docx -> WordParser -> TranslationEngine -> WordRebuilder / PDFRebuild
 - 百川
 - 硅基流动
 
-当前默认引擎：`kimi`
+当前客户版默认翻译模式：服务端中转。`kimi` 仅作为本地备用模式中的可选引擎。
 
 已完成：
 
@@ -146,22 +146,22 @@ userData/memory/translation-cache.json
 
 ### 4.7 授权系统
 
-当前授权系统为本地服务壳，尚未接真实服务端。
+当前授权系统已转向月度离线授权码，服务端翻译时仍需二次校验授权码。
 
 已完成：
 
 - 无设备指纹授权设计。
 - 删除/改写设备指纹、设备绑定、设备管理相关内容。
 - `LicenseService` 本地服务。
-- 授权码格式校验。
-- 本地待验证状态缓存。
+- 月度授权码格式校验。
+- 授权有效期、剩余天数、本地状态缓存。
 - 激活页接入本地授权壳。
 
 未完成：
 
-- 授权服务器 API。
-- 签名令牌校验。
-- 离线宽限期。
+- 翻译服务端 API。
+- 授权码服务端二次校验。
+- 服务端模型池自动切换。
 - 授权撤销与黑名单。
 
 ## 5. 关键文件索引
@@ -210,6 +210,7 @@ userData/memory/translation-cache.json
 - `design/11-current-version-backlog.md`
 - `design/12-permanent-memory-agent.md`
 - `design/13-codex-handoff-summary.md`
+- `design/14-client-feedback-roadmap.md`
 
 ## 6. 最近验证命令
 
@@ -270,9 +271,10 @@ npm.cmd run dist:win
 
 P0：
 
-- 打包 Python embedded runtime 和依赖。
-- 打包中文字体资源。
-- 在无系统 Python 的 Windows 环境验证运行。
+- 配置并验证服务端翻译代理地址。
+- 完成服务端 `/api/health`、`/api/translate`、`/api/license/validate`。
+- 用有效月度授权码验证客户 ZIP 不填写模型 Key 也能翻译。
+- 打包中文字体资源，并在无系统 Python 的 Windows 环境验证运行。
 
 P1：
 
@@ -297,11 +299,11 @@ P2：
 
 建议优先做：
 
-1. Python embedded runtime 打包。
-2. 依赖安装到内置 Python。
-3. 修改打包配置包含 `python-embedded`。
-4. 用设置页“环境自检”验证打包后 Python 和依赖可用。
-5. 重新生成 `win-unpacked`。
+1. 配置客户版翻译服务地址。
+2. 实现并部署服务端模型池自动切换。
+3. 用月度授权码跑通 DOCX/PDF 样例翻译。
+4. 补充中文字体资源。
+5. 重新生成客户 ZIP 并在干净 Windows 环境验证。
 
 理由：
 
@@ -316,4 +318,3 @@ P2：
 - PDF 输出在没有 Word / LibreOffice / docx2pdf 能力时会走 ReportLab fallback，排版保真有限。
 - 授权服务目前只是本地壳，不能用于正式商业发布。
 - `design/11-current-version-backlog.md` 历史上存在编码显示问题，不建议为小功能大面积重写。
-

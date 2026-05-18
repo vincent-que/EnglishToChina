@@ -2,11 +2,10 @@ import { useState, useEffect } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { Workspace } from './pages/Workspace';
 import { Settings } from './pages/Settings';
-import { Preview } from './pages/Preview';
 import { Activation } from './pages/Activation';
 import { useThemeStore } from './stores/theme-store';
 
-type Page = 'workspace' | 'preview' | 'settings' | 'activation';
+type Page = 'workspace' | 'settings' | 'activation';
 
 export default function App() {
   const [page, setPage] = useState<Page>('workspace');
@@ -20,8 +19,6 @@ export default function App() {
     switch (page) {
       case 'workspace':
         return <Workspace />;
-      case 'preview':
-        return <Preview />;
       case 'settings':
         return <Settings />;
       case 'activation':

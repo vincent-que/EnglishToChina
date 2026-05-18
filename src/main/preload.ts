@@ -2,7 +2,7 @@ import { contextBridge, ipcRenderer, webUtils } from 'electron';
 
 export interface ElectronAPI {
   translation: {
-    start: (args: { filePath: string; style: string; termTables: string[]; outputFormat: string }) => Promise<{ taskId: string }>;
+    start: (args: { taskId?: string; filePath: string; style: string; termTables: string[]; outputFormat: string }) => Promise<{ taskId: string }>;
     cancel: (taskId: string) => void;
     onProgress: (callback: (data: { percent: number; stage: string; message?: string }) => void) => () => void;
     onComplete: (callback: (data: { taskId: string; outputPath: string }) => void) => () => void;

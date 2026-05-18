@@ -44,11 +44,15 @@ export function Activation() {
     invalid: '无效授权',
   }[license.status];
 
+  const expiresAtLabel = license.expiresAt
+    ? new Date(license.expiresAt).toLocaleDateString('zh-CN')
+    : '未激活';
+
   return (
     <div className="activation-page">
       <div className="activation-header">
         <h1>账户信息</h1>
-        <p className="activation-subtitle">输入授权码，解锁完整功能</p>
+        <p className="activation-subtitle">输入当月授权码后即可使用服务端翻译</p>
       </div>
 
       <div className="activation-card">
@@ -62,8 +66,13 @@ export function Activation() {
           <div>
             <div className="activation-status-label">{statusLabel}</div>
             <div className="activation-status-desc">
-              当前方案：{license.plan || 'trial'} · 可用功能：{license.features.join(', ')}
+              当前方案：{license.plan || 'trial'} · 到期时间：{expiresAtLabel}
             </div>
+            {license.status === 'active' && (
+              <div className="activation-status-desc">
+                剩余 {license.daysRemaining ?? 0} 天 · 可用功能：{license.features.join(', ')}
+              </div>
+            )}
           </div>
         </div>
 
@@ -72,7 +81,7 @@ export function Activation() {
           <input
             type="text"
             className="input activation-input"
-            placeholder="例如 ABCD-EFGH-IJKL-MNOP"
+            placeholder="例如 ETC-202605-ABCD-1234-A1B2C3"
             value={code}
             onChange={(e) => setCode(e.target.value)}
           />
@@ -96,13 +105,13 @@ export function Activation() {
       <div className="activation-card">
         <h3 className="activation-card-title">授权说明</h3>
         <p className="activation-card-desc">
-          当前版本已接入本地授权服务壳，后续只需要补充授权服务器地址和签名令牌校验即可正式启用。
+          当前版本使用月度授权码。授权码每月月初更新，到期后输入新码即可继续使用。
           授权流程不采集硬件标识，也不做本机绑定。
         </p>
         <div className="activation-features">
-          <div className="activation-feature"><span className="feature-check">✓</span><span>支持授权码格式校验</span></div>
-          <div className="activation-feature"><span className="feature-check">✓</span><span>支持本地授权状态缓存</span></div>
-          <div className="activation-feature"><span className="feature-check">✓</span><span>后续接入服务端签名令牌</span></div>
+          <div className="activation-feature"><span className="feature-check">✓</span><span>月度授权码本地校验有效期</span></div>
+          <div className="activation-feature"><span className="feature-check">✓</span><span>翻译请求会携带授权码进行服务端二次校验</span></div>
+          <div className="activation-feature"><span className="feature-check">✓</span><span>无需客户配置 Kimi 或其它模型 Key</span></div>
         </div>
       </div>
 
